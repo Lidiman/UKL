@@ -91,13 +91,13 @@ header button{
 }
 
 article {
-  width: 80%; /* Adjust as needed */
-  margin: 20px auto; /* Centers the article */
+  width: 80%; 
+  margin: 20px auto; 
   padding: 20px;
-  border: 1px solid #ccc; /* Adds a subtle border */
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Adds a slight shadow */
-  font-family: sans-serif; /* Use a standard font */
-  line-height: 1.6; /* Improves readability */
+  border: 1px solid #ccc; 
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); 
+  font-family: sans-serif; 
+  line-height: 1.6; 
   color:white;
 }
 
