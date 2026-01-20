@@ -43,7 +43,7 @@
             <ul class="nav-links">
                 <li><a href="#features">Fitur</a></li>
                 <li><a href="#how-it-works">Cara Kerja</a></li>
-                <li><a href="#cta" class="cta-button">Masuk</a></li>
+                <li><a href="/login" class="cta-button">Masuk</a></li>
             </ul>
         </div>
     </nav>
