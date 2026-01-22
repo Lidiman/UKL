@@ -6,8 +6,8 @@
     <title>Login - ProductivityFlow</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="css/landing.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
                 <span class="logo-text">ProductivityFlow</span>
             </div>
             <ul class="nav-links">
-                <li><a href="index.php">Kembali</a></li>
+                <li><a href="/">Kembali</a></li>
             </ul>
         </div>
     </nav>
@@ -37,8 +37,10 @@
                 <form 
                     class="login-form"
                     method="POST"
-                    action="login_process.php"
+                    action="{{ route('login.process') }}"
                 >
+                    @csrf
+
                     <!-- Email -->
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -82,8 +84,8 @@
 
                 <!-- Links -->
                 <div class="login-links">
-                    <p>Belum punya akun? <a href="register.php">Daftar di sini</a></p>
-                    <p><a href="forgot_password.php">Lupa kata sandi?</a></p>
+                    <p>Belum punya akun? <a href="/register">Daftar di sini</a></p>
+                    <p><a href="/forgot-password">Lupa kata sandi?</a></p>
                 </div>
             </div>
         </div>
