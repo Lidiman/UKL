@@ -16,6 +16,7 @@ jobs:
 
       - name: Laravel setup
         run: |
+          composer update
           php artisan migrate --force
           php artisan config:cache
           php artisan route:cache
