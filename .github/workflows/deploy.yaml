@@ -22,7 +22,7 @@ jobs:
 
       - name: Laravel optimize & migrate
         run: |
-          cd /var/www/ukl
+          cd /var/www/UKL
           php artisan migrate --force
           php artisan config:cache
           php artisan route:cache
