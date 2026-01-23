@@ -18,6 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd /var/www/UKL
+          composer update
           composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Laravel optimize & migrate
