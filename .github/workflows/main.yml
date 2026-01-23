@@ -1,0 +1,30 @@
+name: Deploy Laravel Local Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+    - name: Setup environment
+      run: |
+        cp .env.example .env || true
+        php artisan key:generate || true
+
+    - name: Migrate & Optimize
+      run: |
+        php artisan migrate --force
+        php artisan config:clear
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
