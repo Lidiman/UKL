@@ -80,7 +80,7 @@
                         </div>
                     @else
                         <img src="https://www.gravatar.com/avatar/?s=200&d=mp" alt="avatar" class="avatar mb-3">
-                        <h5 class="card-title mb-0">Guest</h5>
+                        <h5 class="card-title mb-0">Gues</h5>
                         <p class="text-muted small mb-2">Please log in to see profile details.</p>
                         <a href="{{ route('login') ?? '#' }}" class="btn btn-primary btn-sm">Login</a>
                     @endauth
