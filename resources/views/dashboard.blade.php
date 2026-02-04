@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - ProductivityFlow</title>
 
-    <!-- CSS -->
+    <!-- style utama -->
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 
-    <!-- Fonts -->
+    <!-- font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Navigation -->
+    <!-- navbar atas -->
     <nav class="navbar">
         <div class="container">
             <div class="logo">
@@ -33,20 +33,25 @@
         </div>
     </nav>
 
-    <!-- Dashboard Section -->
+    <!-- isi dashboard -->
     <section class="dashboard-section">
         <div class="container">
-            <!-- Welcome Header -->
+
+            <!-- sambutan -->
             <div class="welcome-header">
                 <h1>Selamat Datang, {{ Auth::user()->name }}!</h1>
-                <p>Kelola dan pantau aktivitas Anda di sini</p>
+                <p>Ringkasan aktivitas kamu ada di sini</p>
             </div>
 
-            <!-- Profile Card -->
+            <!-- kartu profil -->
             <div class="profile-section" id="profile">
                 <div class="profile-card">
                     <div class="profile-header">
-                        <img src="{{ Auth::user()->avatar ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(Auth::user()->email))).'?s=150&d=identicon' }}" alt="avatar" class="profile-avatar">
+                        <img 
+                            src="{{ Auth::user()->avatar ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(Auth::user()->email))).'?s=150&d=identicon' }}" 
+                            alt="avatar" 
+                            class="profile-avatar"
+                        >
                         <div class="profile-info">
                             <h2>{{ Auth::user()->name }}</h2>
                             <p class="profile-email">{{ Auth::user()->email }}</p>
@@ -54,6 +59,7 @@
                         </div>
                     </div>
 
+                    <!-- statistik singkat -->
                     <div class="profile-stats">
                         <div class="stat-item">
                             <div class="stat-value">0</div>
@@ -71,19 +77,19 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
+            <!-- tombol aksi -->
             <div class="action-buttons">
                 <a href="/" class="btn-action btn-primary">
                     <span class="btn-icon">←</span>
-                    Kembali ke Landing Page
+                    Balik ke Landing
                 </a>
                 <a href="#" class="btn-action btn-secondary">
                     <span class="btn-icon">⚙</span>
-                    Pengaturan Akun
+                    Setting Akun
                 </a>
             </div>
 
-            <!-- Quick Stats Section -->
+            <!-- info cepat -->
             <div class="quick-stats">
                 <h3>Statistik Cepat</h3>
                 <div class="stats-grid">
@@ -94,7 +100,7 @@
                     </div>
                     <div class="stat-box">
                         <div class="stat-box-icon">✅</div>
-                        <h4>Tugas Selesai</h4>
+                        <h4>Tugas Beres</h4>
                         <p class="stat-box-value">12</p>
                     </div>
                     <div class="stat-box">
