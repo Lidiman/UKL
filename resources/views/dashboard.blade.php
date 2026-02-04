@@ -1,142 +1,112 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Dashboard</title>
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: #f5f7fb; }
-        .profile-card { max-width: 480px; margin: 1.5rem auto; }
-        .avatar {
-            width: 96px; height: 96px; object-fit:cover;
-            border-radius:50%; border:4px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,0.08);
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ProductivityFlow</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="#">Team Dashboard</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navMain">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Projects</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Team</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
-            </ul>
-
-            <ul class="navbar-nav ms-auto">
-                @auth
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ Auth::user()->avatar ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(Auth::user()->email ?? ''))).' ?s=40&d=identicon' }}" alt="avatar" class="rounded-circle me-2" width="32" height="32">
-                            <span>{{ Auth::user()->name }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                            <li><a class="dropdown-item" href="#">Settings</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                    @csrf
-                                    <button class="dropdown-item" type="submit">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                @else
-                    <li class="nav-item"><a class="nav-link" href="{{ route('login') ?? '#' }}">Login</a></li>
-                @endauth
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-text">ProductivityFlow</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Landing</a></li>
+                <li><a href="#profile">Profil</a></li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="nav-logout">Keluar</button>
+                    </form>
+                </li>
             </ul>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<main class="container my-4">
-    <div class="row">
-        <div class="col-12 text-center mb-4">
-            <h1 class="h4">Please make a good Dashboard here that have Profile and a navbar</h1>
-            <p class="text-muted">This is a starter layout. Customize components and routes as needed.</p>
-        </div>
-    </div>
-
-    <div class="row justify-content-center">
-        <!-- Profile card -->
-        <div class="col-12 col-md-6">
-            <div class="card profile-card shadow-sm">
-                <div class="card-body text-center">
-                    @auth
-                        <img src="{{ Auth::user()->avatar ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(Auth::user()->email))).'?s=200&d=identicon' }}" alt="avatar" class="avatar mb-3">
-                        <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
-                        <p class="text-muted small mb-2">{{ Auth::user()->email }}</p>
-                        <p class="mb-3"><span class="badge bg-primary">{{ Auth::user()->role ?? 'Team Member' }}</span></p>
-
-                        <div class="d-flex justify-content-center gap-2">
-                            <a href="#" class="btn btn-outline-secondary btn-sm">View Activity</a>
-                        </div>
-                    @else
-                        <img src="https://www.gravatar.com/avatar/?s=200&d=mp" alt="avatar" class="avatar mb-3">
-                        <h5 class="card-title mb-0">Gues</h5>
-                        <p class="text-muted small mb-2">Please log in to see profile details.</p>
-                        <a href="{{ route('login') ?? '#' }}" class="btn btn-primary btn-sm">Login</a>
-                    @endauth
-                </div>
+    <!-- Dashboard Section -->
+    <section class="dashboard-section">
+        <div class="container">
+            <!-- Welcome Header -->
+            <div class="welcome-header">
+                <h1>Selamat Datang, {{ Auth::user()->name }}!</h1>
+                <p>Kelola dan pantau aktivitas Anda di sini</p>
             </div>
 
-            <!-- Quick stats / placeholders -->
-            <div class="row mt-3 gx-2">
-                <div class="col-6">
-                    <div class="card text-center small">
-                        <div class="card-body">
-                            <div class="fw-bold">12</div>
-                            <div class="text-muted">Projects</div>
+            <!-- Profile Card -->
+            <div class="profile-section" id="profile">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img src="{{ Auth::user()->avatar ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(Auth::user()->email))).'?s=150&d=identicon' }}" alt="avatar" class="profile-avatar">
+                        <div class="profile-info">
+                            <h2>{{ Auth::user()->name }}</h2>
+                            <p class="profile-email">{{ Auth::user()->email }}</p>
+                            <span class="profile-badge">Member</span>
                         </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="card text-center small">
-                        <div class="card-body">
-                            <div class="fw-bold">4</div>
-                            <div class="text-muted">Open Tasks</div>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Proyek</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Tugas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Tim</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div>
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/" class="btn-action btn-primary">
+                    <span class="btn-icon">←</span>
+                    Kembali ke Landing Page
+                </a>
+                <a href="#" class="btn-action btn-secondary">
+                    <span class="btn-icon">⚙</span>
+                    Pengaturan Akun
+                </a>
+            </div>
 
-        <!-- Right column: quick links / activity -->
-        <div class="col-12 col-md-4 mt-3 mt-md-0">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h6 class="mb-3">Quick Links</h6>
-                    <ul class="list-unstyled small mb-0">
-                        <li><a href="#" class="d-block py-1">Create Project</a></li>
-                        <li><a href="#" class="d-block py-1">Team Members</a></li>
-                        <li><a href="#" class="d-block py-1">Reports</a></li>
-                        <li><a href="#" class="d-block py-1">Support</a></li>
-                    </ul>
+            <!-- Quick Stats Section -->
+            <div class="quick-stats">
+                <h3>Statistik Cepat</h3>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-box-icon">📊</div>
+                        <h4>Aktivitas Hari Ini</h4>
+                        <p class="stat-box-value">5</p>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-icon">✅</div>
+                        <h4>Tugas Selesai</h4>
+                        <p class="stat-box-value">12</p>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-icon">🔔</div>
+                        <h4>Notifikasi</h4>
+                        <p class="stat-box-value">3</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="card mt-3 shadow-sm">
-                <div class="card-body">
-                    <h6 class="mb-3">Recent Activity</h6>
-                    <p class="small text-muted mb-0">No recent activity — start collaborating with your team.</p>
-                </div>
-            </div>
         </div>
-    </div>
-</main>
+    </section>
 
-<footer class="text-center py-3 text-muted small">
-    © {{ date('Y') }} Your Team
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

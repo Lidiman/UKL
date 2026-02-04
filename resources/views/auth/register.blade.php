@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ProductivityFlow</title>
+    <title>Daftar - ProductivityFlow</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
@@ -26,14 +26,14 @@
         </div>
     </nav>
 
-    <!-- Login Section -->
+    <!-- regis section -->
     <section class="login-section">
         <div class="login-container">
             <div class="login-box">
-                <h1>Masuk</h1>
-                <p>Lanjutkan dengan akun mu</p>
+                <h1>Daftar</h1>
+                <p>Buat akun baru untuk memulai</p>
 
-                <!-- Error Messages -->
+                <!-- error mssagse -->
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         @foreach ($errors->all() as $error)
@@ -42,15 +42,31 @@
                     </div>
                 @endif
 
-                <!-- FORM LOGIN -->
+                <!-- FORM REGISTER -->
                 <form 
                     class="login-form"
                     method="POST"
-                    action="{{ route('login.process') }}"
+                    action="{{ route('register.process') }}"
                 >
                     @csrf
 
-                    <!-- Email -->
+                    <!-- jenng full -->
+                    <div class="form-group">
+                        <label for="name">Nama Lengkap</label>
+                        <input 
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Nama lengkap Anda"
+                            value="{{ old('name') }}"
+                            required
+                        >
+                        @error('name')
+                            <span class="form-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- emil -->
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input 
@@ -66,7 +82,7 @@
                         @enderror
                     </div>
 
-                    <!-- Password -->
+                    <!-- Pw -->
                     <div class="form-group">
                         <label for="password">Kata Sandi</label>
                         <input 
@@ -81,27 +97,42 @@
                         @enderror
                     </div>
 
-                    <!-- Remember Me -->
+                    <!-- acc pw -->
+                    <div class="form-group">
+                        <label for="password_confirmation">Konfirmasi Kata Sandi</label>
+                        <input 
+                            type="password"
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            placeholder="••••••••"
+                            required
+                        >
+                        @error('password_confirmation')
+                            <span class="form-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- terms -->
                     <div class="form-checkbox">
                         <input 
                             type="checkbox"
-                            id="remember"
-                            name="remember"
+                            id="terms"
+                            name="terms"
                             value="1"
+                            required
                         >
-                        <label for="remember">Ingat saya</label>
+                        <label for="terms">Saya setuju dengan <a href="#">Syarat & Ketentuan</a></label>
                     </div>
 
-                    <!-- Submit -->
+                    <!-- submit nk kne -->
                     <button type="submit" class="btn-login">
-                        Masuk
+                        Daftar
                     </button>
                 </form>
 
-                <!-- Links -->
+                <!-- link e -->
                 <div class="login-links">
-                    <p>Belum punya akun? <a href="/register">Daftar di sini</a></p>
-                    <p><a href="/forgot-password">Lupa kata sandi?</a></p>
+                    <p>Sudah punya akun? <a href="/login">Masuk di sini</a></p>
                 </div>
             </div>
         </div>
