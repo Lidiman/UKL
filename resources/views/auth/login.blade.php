@@ -57,7 +57,7 @@
                             type="email"
                             id="email"
                             name="email"
-                            placeholder="nama@email.com"
+                            placeholder="yourname@email.com"
                             value="{{ old('email') }}"
                             required
                         >
