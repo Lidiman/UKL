@@ -188,7 +188,7 @@
         <div class="cta-content">
             <h2>Siap Meningkatkan Produktivitasmu?</h2>
             <p>Bergabunglah dengan ribuan pengguna yang telah mengubah cara mereka bekerja.</p>
-            <button class="btn btn-primary btn-large">Mulai Gratis Sekarang</button>
+            <button class="btn btn-primary btn-large" onclick="window.location='{{ route('register') }}'">Mulai Gratis Sekarang</button>
             <p class="cta-footer">Tidak perlu kartu kredit. Akses penuh ke semua fitur.</p>
         </div>
     </section>

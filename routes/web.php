@@ -18,3 +18,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth');
+
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
