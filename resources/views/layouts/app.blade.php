@@ -1,43 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>@yield('title', 'ProductivityFlow')</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="page-loader"
-    class="fixed inset-0 bg-white flex items-center justify-center z-50 opacity-0 transition-all duration-300">
-    <div class="flex flex-col items-center gap-4">
-        <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-gray-600 font-medium">Loading...</p>
+
+    <!-- LOADING SCREEN -->
+    <div id="page-loader" class="active">
+        <div class="loader"></div>
     </div>
 
-</div>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-text">ProductivityFlow</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Landing</a></li>
+                <li><a href="#profile">Profil</a></li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="nav-logout">Keluar</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-    const loader = document.getElementById("page-loader");
+    <!-- ISI HALAMAN -->
+    <main>
+        @yield('content')
+    </main>
 
-    // Saat pertama kali halaman selesai load → sembunyikan loader
-    window.addEventListener("load", function () {
-        loader.classList.add("opacity-0");
-        loader.classList.add("pointer-events-none");
-    });
+    <!-- SCRIPT LOADER -->
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const loader = document.getElementById("page-loader");
 
-    // Saat klik link → tampilkan loader
-    document.querySelectorAll("a").forEach(link => {
-        link.addEventListener("click", function (e) {
+        window.addEventListener("load", () => {
+            loader.classList.remove("active");
+        });
 
-            // Hindari link dengan target _blank atau anchor #
-            if (link.target === "_blank" || link.href.includes("#")) return;
+        document.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                const href = link.getAttribute("href");
+                if (href && !href.startsWith("#") && !link.hasAttribute("target")) {
+                    loader.classList.add("active");
+                }
+            });
+        });
 
-            loader.classList.remove("opacity-0");
-            loader.classList.remove("pointer-events-none");
+        document.querySelectorAll("form").forEach(form => {
+            form.addEventListener("submit", () => {
+                loader.classList.add("active");
+            });
         });
     });
+    </script>
 
-});
-</script>
 </body>
 </html>
