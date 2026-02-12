@@ -1,0 +1,30 @@
+name: Deploy Laravel to Local Server
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Pull latest code
+        run: |
+          cd /var/www/UKL
+          git fetch origin
+          git reset --hard origin/main
+
+      - name: Install dependencies
+        run: |
+          cd /var/www/UKL
+          composer update
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Laravel optimize & migrate
+        run: |
+          cd /var/www/UKL
+          php artisan migrate --force
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache

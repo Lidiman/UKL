@@ -1054,6 +1054,7 @@
         },
         {
             "name": "laravel/framework",
+<<<<<<< HEAD
             "version": "v12.47.0",
             "source": {
                 "type": "git",
@@ -1064,6 +1065,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/ab8114c2e78f32e64eb238fc4b495bea3f8b80ec",
                 "reference": "ab8114c2e78f32e64eb238fc4b495bea3f8b80ec",
+=======
+            "version": "v12.48.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "0f0974a9769378ccd9c9935c09b9927f3a606830"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/0f0974a9769378ccd9c9935c09b9927f3a606830",
+                "reference": "0f0974a9769378ccd9c9935c09b9927f3a606830",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -1176,7 +1189,11 @@
                 "league/flysystem-sftp-v3": "^3.25.1",
                 "mockery/mockery": "^1.6.10",
                 "opis/json-schema": "^2.4.1",
+<<<<<<< HEAD
                 "orchestra/testbench-core": "^10.8.1",
+=======
+                "orchestra/testbench-core": "^10.9.0",
+>>>>>>> main
                 "pda/pheanstalk": "^5.0.6|^7.0.0",
                 "php-http/discovery": "^1.15",
                 "phpstan/phpstan": "^2.0",
@@ -1272,7 +1289,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
+<<<<<<< HEAD
             "time": "2026-01-13T15:29:06+00:00"
+=======
+            "time": "2026-01-20T16:12:36+00:00"
+>>>>>>> main
         },
         {
             "name": "laravel/prompts",
@@ -1839,6 +1860,7 @@
         },
         {
             "name": "league/uri",
+<<<<<<< HEAD
             "version": "7.7.0",
             "source": {
                 "type": "git",
@@ -1853,6 +1875,22 @@
             },
             "require": {
                 "league/uri-interfaces": "^7.7",
+=======
+            "version": "7.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/uri.git",
+                "reference": "4436c6ec8d458e4244448b069cc572d088230b76"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/uri/zipball/4436c6ec8d458e4244448b069cc572d088230b76",
+                "reference": "4436c6ec8d458e4244448b069cc572d088230b76",
+                "shasum": ""
+            },
+            "require": {
+                "league/uri-interfaces": "^7.8",
+>>>>>>> main
                 "php": "^8.1",
                 "psr/http-factory": "^1"
             },
@@ -1866,11 +1904,19 @@
                 "ext-gmp": "to improve IPV4 host parsing",
                 "ext-intl": "to handle IDN host with the best performance",
                 "ext-uri": "to use the PHP native URI class",
+<<<<<<< HEAD
                 "jeremykendall/php-domain-parser": "to resolve Public Suffix and Top Level Domain",
                 "league/uri-components": "Needed to easily manipulate URI objects components",
                 "league/uri-polyfill": "Needed to backport the PHP URI extension for older versions of PHP",
                 "php-64bit": "to improve IPV4 host parsing",
                 "rowbot/url": "to handle WHATWG URL",
+=======
+                "jeremykendall/php-domain-parser": "to further parse the URI host and resolve its Public Suffix and Top Level Domain",
+                "league/uri-components": "to provide additional tools to manipulate URI objects components",
+                "league/uri-polyfill": "to backport the PHP URI extension for older versions of PHP",
+                "php-64bit": "to improve IPV4 host parsing",
+                "rowbot/url": "to handle URLs using the WHATWG URL Living Standard specification",
+>>>>>>> main
                 "symfony/polyfill-intl-idn": "to handle IDN host via the Symfony polyfill if ext-intl is not present"
             },
             "type": "library",
@@ -1925,7 +1971,11 @@
                 "docs": "https://uri.thephpleague.com",
                 "forum": "https://thephpleague.slack.com",
                 "issues": "https://github.com/thephpleague/uri-src/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/thephpleague/uri/tree/7.7.0"
+=======
+                "source": "https://github.com/thephpleague/uri/tree/7.8.0"
+>>>>>>> main
             },
             "funding": [
                 {
@@ -1933,6 +1983,7 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
             "time": "2025-12-07T16:02:06+00:00"
         },
         {
@@ -1947,6 +1998,22 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/thephpleague/uri-interfaces/zipball/62ccc1a0435e1c54e10ee6022df28d6c04c2946c",
                 "reference": "62ccc1a0435e1c54e10ee6022df28d6c04c2946c",
+=======
+            "time": "2026-01-14T17:24:56+00:00"
+        },
+        {
+            "name": "league/uri-interfaces",
+            "version": "7.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/uri-interfaces.git",
+                "reference": "c5c5cd056110fc8afaba29fa6b72a43ced42acd4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/uri-interfaces/zipball/c5c5cd056110fc8afaba29fa6b72a43ced42acd4",
+                "reference": "c5c5cd056110fc8afaba29fa6b72a43ced42acd4",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -1959,7 +2026,11 @@
                 "ext-gmp": "to improve IPV4 host parsing",
                 "ext-intl": "to handle IDN host with the best performance",
                 "php-64bit": "to improve IPV4 host parsing",
+<<<<<<< HEAD
                 "rowbot/url": "to handle WHATWG URL",
+=======
+                "rowbot/url": "to handle URLs using the WHATWG URL Living Standard specification",
+>>>>>>> main
                 "symfony/polyfill-intl-idn": "to handle IDN host via the Symfony polyfill if ext-intl is not present"
             },
             "type": "library",
@@ -2009,7 +2080,11 @@
                 "docs": "https://uri.thephpleague.com",
                 "forum": "https://thephpleague.slack.com",
                 "issues": "https://github.com/thephpleague/uri-src/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/thephpleague/uri-interfaces/tree/7.7.0"
+=======
+                "source": "https://github.com/thephpleague/uri-interfaces/tree/7.8.0"
+>>>>>>> main
             },
             "funding": [
                 {
@@ -2017,7 +2092,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
             "time": "2025-12-07T16:03:21+00:00"
+=======
+            "time": "2026-01-15T06:54:53+00:00"
+>>>>>>> main
         },
         {
             "name": "monolog/monolog",
@@ -4625,6 +4704,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
+<<<<<<< HEAD
             "version": "v1.33.0",
             "source": {
                 "type": "git",
@@ -4639,6 +4719,21 @@
             },
             "require": {
                 "ext-iconv": "*",
+=======
+            "version": "v1.31.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-mbstring.git",
+                "reference": "85181ba99b2345b0ef10ce42ecac37612d9fd341"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/85181ba99b2345b0ef10ce42ecac37612d9fd341",
+                "reference": "85181ba99b2345b0ef10ce42ecac37612d9fd341",
+                "shasum": ""
+            },
+            "require": {
+>>>>>>> main
                 "php": ">=7.2"
             },
             "provide": {
@@ -4686,7 +4781,11 @@
                 "shim"
             ],
             "support": {
+<<<<<<< HEAD
                 "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.33.0"
+=======
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.31.0"
+>>>>>>> main
             },
             "funding": [
                 {
@@ -4698,15 +4797,22 @@
                     "type": "github"
                 },
                 {
+<<<<<<< HEAD
                     "url": "https://github.com/nicolas-grekas",
                     "type": "github"
                 },
                 {
+=======
+>>>>>>> main
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2024-12-23T08:48:59+00:00"
+=======
+            "time": "2024-09-09T11:45:10+00:00"
+>>>>>>> main
         },
         {
             "name": "symfony/polyfill-php80",
@@ -7088,6 +7194,7 @@
         },
         {
             "name": "phpunit/phpunit",
+<<<<<<< HEAD
             "version": "11.5.47",
             "source": {
                 "type": "git",
@@ -7098,6 +7205,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a8c3c540923f8a3d499659b927228059bb3809d8",
                 "reference": "a8c3c540923f8a3d499659b927228059bb3809d8",
+=======
+            "version": "11.5.48",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/phpunit.git",
+                "reference": "fe3665c15e37140f55aaf658c81a2eb9030b6d89"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fe3665c15e37140f55aaf658c81a2eb9030b6d89",
+                "reference": "fe3665c15e37140f55aaf658c81a2eb9030b6d89",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -7169,7 +7288,11 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
+<<<<<<< HEAD
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.47"
+=======
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.48"
+>>>>>>> main
             },
             "funding": [
                 {
@@ -7193,7 +7316,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2026-01-15T12:00:46+00:00"
+=======
+            "time": "2026-01-16T16:26:27+00:00"
+>>>>>>> main
         },
         {
             "name": "sebastian/cli-parser",
