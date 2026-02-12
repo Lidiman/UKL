@@ -1,12 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
 
 Route::get('/', function () {
     return view('index');
 });
-=======
 use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
@@ -28,4 +26,4 @@ Route::get('/dashboard', function () {
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
->>>>>>> main
+
