@@ -29,6 +29,17 @@
     pointer-events: all;
 }
 
+#page-loader {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#page-loader.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+
 /* LOADER */
 .loader {
   width: 45px;
