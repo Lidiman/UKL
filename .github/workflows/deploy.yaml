@@ -2,7 +2,7 @@ name: Deploy Laravel to Local Server
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   deploy:
@@ -13,7 +13,7 @@ jobs:
         run: |
           cd /var/www/UKL
           git fetch origin
-          git reset --hard origin/main
+          git reset --hard origin/master
 
       - name: Install dependencies
         run: |
