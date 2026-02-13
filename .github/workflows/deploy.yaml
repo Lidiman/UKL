@@ -9,6 +9,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Backup .env
+        run: |
+          cp /var/www/UKL/.env /home/siswa/temp/.env.backup
+
       - name: Checkout source
         uses: actions/checkout@v4
 
@@ -28,6 +32,7 @@ jobs:
 
       - name: Laravel optimize & migrate
         run: |
+          mv /home/siswa/temp/.env.backup /var/www/UKL/.env
           cd /var/www/UKL
           php artisan migrate --force
           php artisan config:cache
