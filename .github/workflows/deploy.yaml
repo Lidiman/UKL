@@ -18,12 +18,7 @@ jobs:
           rsync -a --delete ./ /home/siswa/build/UKL
           cd /home/siswa/build/UKL
           composer update
-          composer install \
-            --no-dev \
-            --no-scripts \
-            --no-interaction \
-            --prefer-dist \
-            --optimize-autoloader
+          composer install
 
       - name: Deploy to web root
         run: |
