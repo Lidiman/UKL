@@ -227,6 +227,21 @@
     margin: 0;
 }
 
+/* Navigation Links List Items */
+.nav-links li {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.nav-links li form {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
 /* Navigation Logout Button */
 .nav-logout {
     background: transparent;
@@ -235,8 +250,14 @@
     cursor: pointer;
     font-weight: 500;
     padding: 0;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     font-size: 1rem;
+    font-family: inherit;
+    text-decoration: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
 }
 
 .nav-logout:hover {
@@ -245,6 +266,10 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+.nav-logout:active {
+    transform: scale(0.98);
 }
 
 /* Animations */
@@ -317,3 +342,4 @@
         font-size: 2rem;
     }
 }
+
