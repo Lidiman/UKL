@@ -3,192 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Task Manager - ProductivityFlow</title>
-
-    <!-- style utama -->
-    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     <link rel="stylesheet" href="{{ asset('css/task-manager.css') }}">
-
-    <!-- font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-
-    <!-- lucide icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-
-    <!-- navbar atas -->
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <div class="logo">
+                <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#1e5a96;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#0d9488;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="60" cy="60" r="55" fill="url(#logoGrad)" />
+                    <g fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M 35 35 L 35 85" />
+                        <path d="M 35 35 Q 55 35 55 50 Q 55 65 35 65" />
+                        <path d="M 55 50 Q 70 40 80 35" />
+                        <path d="M 80 35 L 85 30" />
+                    </g>
+                    <g fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round">
+                        <path d="M 75 70 L 85 60 L 95 50" />
+                    </g>
+                </svg>
                 <span class="logo-text">ProductivityFlow</span>
             </div>
-            <ul class="nav-links">
-                <li><a href="/">Landing</a></li>
-                <li><a href="/dashboard">Dashboard</a></li>
-                <li>
-                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="nav-logout">Keluar</button>
-                    </form>
-                </li>
-            </ul>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="/">Landing</a></li>
+                    <li><a href="#" class="active">Task Manager</a></li>
+                    <li><a href="#" class="profile-btn">👤 Profile</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <!-- task manager section -->
-    <section class="task-manager-section">
-        <div class="container">
-
-            <!-- header -->
-            <div class="tm-header">
-                <div class="tm-title-group">
-                    <h1 class="tm-title"><i data-lucide="clipboard-list" class="tm-title-icon"></i> Task Manager</h1>
-                    <p class="tm-subtitle">Kelola tugas harian & target mingguan dengan jelas</p>
-                </div>
-                <button class="tm-btn-create" data-action="create-task">
-                    <span class="tm-btn-icon">+</span>
-                    Buat Tugas Baru
-                </button>
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📋 Tasks</h2>
             </div>
-
-            <!-- stats overview -->
-            <div class="tm-stats">
-                <div class="stat-card stat-total">
-                    <div class="stat-icon"><i data-lucide="list-todo"></i></div>
-                    <div class="stat-content">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">Total Tugas</div>
-                    </div>
-                </div>
-                <div class="stat-card stat-pending">
-                    <div class="stat-icon"><i data-lucide="clock"></i></div>
-                    <div class="stat-content">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">Pending</div>
-                    </div>
-                </div>
-                <div class="stat-card stat-progress">
-                    <div class="stat-icon"><i data-lucide="rotate-cw"></i></div>
-                    <div class="stat-content">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">In Progress</div>
-                    </div>
-                </div>
-                <div class="stat-card stat-done">
-                    <div class="stat-icon"><i data-lucide="check-circle"></i></div>
-                    <div class="stat-content">
-                        <div class="stat-number">0</div>
-                        <div class="stat-label">Selesai</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- filters & search -->
-            <div class="tm-filters">
-                <div class="tm-search">
-                    <input 
-                        type="text" 
-                        class="tm-search-input" 
-                        placeholder="Cari tugas..."
-                        data-filter="search"
-                    >
-                </div>
-                <div class="tm-filter-group">
-                    <select class="tm-filter-select" data-filter="status">
-                        <option value="">Semua Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="completed">Selesai</option>
-                    </select>
-                    <select class="tm-filter-select" data-filter="priority">
-                        <option value="">Semua Prioritas</option>
-                        <option value="low">Rendah</option>
-                        <option value="medium">Sedang</option>
-                        <option value="high">Tinggi</option>
-                    </select>
-                    <button class="tm-btn-filter">Filter</button>
-                </div>
-            </div>
-
-            <!-- task list -->
-            <div class="tm-tasks">
-                <!-- task item template (akan di-populate dari backend) -->
-                <div class="tm-task-item tm-task-pending tm-task-high">
-                    <div class="tm-task-header">
-                        <div class="tm-task-checkbox">
-                            <input type="checkbox" class="tm-checkbox" data-task-id="1">
-                        </div>
-                        <div class="tm-task-title-group">
-                            <h3 class="tm-task-title">Buat laporan mingguan</h3>
-                            <p class="tm-task-description">Laporan performa sistem untuk minggu ini</p>
-                        </div>
-                        <div class="tm-task-meta">
-                            <span class="tm-priority-badge tm-priority-high">Tinggi</span>
-                            <span class="tm-status-badge tm-status-pending">Pending</span>
-                        </div>
-                    </div>
-                    <div class="tm-task-footer">
-                        <span class="tm-due-date"><i data-lucide="calendar"></i> 20 Feb 2026</span>
-                        <div class="tm-task-actions">
-                            <button class="tm-btn-action" data-action="edit" title="Edit"><i data-lucide="edit-2"></i></button>
-                            <button class="tm-btn-action" data-action="delete" title="Hapus"><i data-lucide="trash-2"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- empty state template -->
-                <div class="tm-empty-state" style="display: none;">
-                    <div class="tm-empty-icon"><i data-lucide="inbox"></i></div>
-                    <h3>Tidak Ada Tugas</h3>
-                    <p>Mulai buat tugas pertama kamu sekarang</p>
-                    <button class="tm-btn-create tm-btn-empty" data-action="create-task">
-                        <span class="tm-btn-icon">+</span>
-                        Buat Tugas Baru
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- modals (akan di-implementasi di backend) -->
-    <!-- create/edit modal akan di-inject via backend -->
-
-    <script>
-        // Simple event delegation untuk buttons (akan di-integrate dengan backend)
-        document.addEventListener('click', function(e) {
-            const action = e.target.closest('[data-action]')?.dataset.action;
             
-            if (action === 'create-task') {
-                console.log('Create task action - akan di-handle oleh backend');
-                // Nanti akan di-redirect ke create form
-            } else if (action === 'edit') {
-                console.log('Edit task action - akan di-handle oleh backend');
-                // Nanti akan di-redirect ke edit form
-            } else if (action === 'delete') {
-                console.log('Delete task action - akan di-handle oleh backend');
-                // Nanti akan di-delete via backend
-            }
-        });
+            <div class="quick-stats">
+                <div class="stat-box">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+            </div>
 
-        // Filter handler (akan di-integrate dengan backend)
-        document.querySelectorAll('[data-filter]').forEach(el => {
-            el.addEventListener('change', function() {
-                console.log('Filter changed - akan di-send ke backend');
-                // Nanti akan fetch data dari backend dengan filter ini
-            });
-        });
+            <button class="btn-add-task btn-primary">+ Tambah Task</button>
 
-        // Search handler (akan di-integrate dengan backend)
-        document.querySelector('[data-filter="search"]')?.addEventListener('input', function() {
-            console.log('Search input - akan di-send ke backend');
-            // Nanti akan fetch data dari backend dengan search ini
-        });
+            <div class="filters">
+                <h3>Filter</h3>
+                <div class="filter-group">
+                    <label class="filter-item active" data-filter="all">
+                        <input type="radio" name="filter" value="all" checked>
+                        <span>Semua</span>
+                    </label>
+                    <label class="filter-item" data-filter="active">
+                        <input type="radio" name="filter" value="active">
+                        <span>Aktif</span>
+                    </label>
+                    <label class="filter-item" data-filter="completed">
+                        <input type="radio" name="filter" value="completed">
+                        <span>Selesai</span>
+                    </label>
+                </div>
+            </div>
 
-        // Initialize Lucide icons
-        lucide.createIcons();
-    </script>
+            <div class="categories">
+                <h3>Kategori</h3>
+                <div class="category-list">
+                    <div class="category-tag active" data-category="all">Semua</div>
+                    <div class="category-tag" data-category="work">💼 Kerja</div>
+                    <div class="category-tag" data-category="personal">👤 Personal</div>
+                    <div class="category-tag" data-category="learning">📚 Belajar</div>
+                    <div class="category-tag" data-category="health">💪 Kesehatan</div>
+                </div>
+            </div>
+        </aside>
 
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header Section -->
+            <div class="content-header">
+                <h1>My Tasks</h1>
+                <div class="header-actions">
+                    <input type="search" class="search-box" placeholder="Cari task...">
+                    <select class="sort-select">
+                        <option value="recent">Terbaru</option>
+                        <option value="priority">Prioritas</option>
+                        <option value="deadline">Deadline</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="progress-section">
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <h3>Progress Minggu Ini</h3>
+                        <span class="progress-percentage">58%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 58%"></div>
+                    </div>
+                    <div class="progress-details">
+                        <p><strong>7 dari 12</strong> task telah selesai</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Grid -->
+            <div class="tasks-container">
+                <!-- Task Card 1 -->
+                <div class="task-card" data-priority="high" data-status="pending">
+                    <div class="task-header">
+                        <div class="task-checkbox">
+                            <input type="checkbox">
+                        </div>
+                        <div class="task-title-section">
+                            <h3 class="task-title">Finish Project Proposal</h3>
+                            <p class="task-description">Selesaikan proposal untuk klien baru sebelum deadline Jumat</p>
+                        </div>
+                        <button class="task-menu">⋮</button>
+                    </div>
+                    
+                    <div class="task-meta">
+                        <span class="priority-badge priority-high">🔴 Tinggi</span>
+                        <span class="category-badge category-work">💼 Kerja</span>
+                        <span class="due-date">📅 Jumat, 28 Feb</span>
+                    </div>
+                </div>
+
+                <!-- Task Card 2 -->
+                <div class="task-card" data-priority="medium" data-status="pending">
+                    <div class="task-header">
+                        <div class="task-checkbox">
+                            <input type="checkbox">
+                        </div>
+                        <div class="task-title-section">
+                            <h3 class="task-title">Team Meeting Review</h3>
+                            <p class="task-description">Diskusi hasil meeting dengan tim tentang roadmap produk</p>
+                        </div>
+                        <button class="task-menu">⋮</button>
+                    </div>
+                    
+                    <div class="task-meta">
+                        <span class="priority-badge priority-medium">🟡 Sedang</span>
+                        <span class="category-badge category-work">💼 Kerja</span>
+                        <span class="due-date">📅 Rabu, 26 Feb</span>
+                    </div>
+                </div>
+
+                <!-- Task Card 3 -->
+                <div class="task-card" data-priority="low" data-status="completed">
+                    <div class="task-header">
+                        <div class="task-checkbox">
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="task-title-section">
+                            <h3 class="task-title completed">Update Documentation</h3>
+                            <p class="task-description">Perbarui dokumentasi API dengan endpoint terbaru</p>
+                        </div>
+                        <button class="task-menu">⋮</button>
+                    </div>
+                    
+                    <div class="task-meta">
+                        <span class="priority-badge priority-low">🟢 Rendah</span>
+                        <span class="category-badge category-work">💼 Kerja</span>
+                        <span class="due-date">📅 Selasa, 25 Feb</span>
+                    </div>
+                </div>
+
+                <!-- Task Card 4 -->
+                <div class="task-card" data-priority="high" data-status="pending">
+                    <div class="task-header">
+                        <div class="task-checkbox">
+                            <input type="checkbox">
+                        </div>
+                        <div class="task-title-section">
+                            <h3 class="task-title">Morning Workout</h3>
+                            <p class="task-description">Olahraga pagi selama 30 menit untuk kesehatan</p>
+                        </div>
+                        <button class="task-menu">⋮</button>
+                    </div>
+                    
+                    <div class="task-meta">
+                        <span class="priority-badge priority-high">🔴 Tinggi</span>
+                        <span class="category-badge category-health">💪 Kesehatan</span>
+                        <span class="due-date">📅 Harian</span>
+                    </div>
+                </div>
+
+                <!-- Task Card 5 -->
+                <div class="task-card" data-priority="medium" data-status="pending">
+                    <div class="task-header">
+                        <div class="task-checkbox">
+                            <input type="checkbox">
+                        </div>
+                        <div class="task-title-section">
+                            <h3 class="task-title">Learn React Hooks</h3>
+                            <p class="task-description">Pelajari advanced patterns untuk React Hooks</p>
+                        </div>
+                        <button class="task-menu">⋮</button>
+                    </div>
+                    
+                    <div class="task-meta">
+                        <span class="priority-badge priority-medium">🟡 Sedang</span>
+                        <span class="category-badge category-learning">📚 Belajar</span>
+                        <span class="due-date">📅 Minggu Depan</span>
+                    </div>
+                </div>
+
+                <!-- Task Card 6 -->
+                <div class="task-card" data-priority="low" data-status="completed">
+                    <div class="task-header">
+                        <div class="task-checkbox">
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="task-title-section">
+                            <h3 class="task-title completed">Grocery Shopping</h3>
+                            <p class="task-description">Belanja kebutuhan sehari-hari di supermarket</p>
+                        </div>
+                        <button class="task-menu">⋮</button>
+                    </div>
+                    
+                    <div class="task-meta">
+                        <span class="priority-badge priority-low">🟢 Rendah</span>
+                        <span class="category-badge category-personal">👤 Personal</span>
+                        <span class="due-date">📅 Sabtu, 27 Feb</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Add Task -->
+    <div class="modal" id="addTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tambah Task Baru</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <form class="task-form">
+                <div class="form-group">
+                    <label>Judul Task</label>
+                    <input type="text" placeholder="Masukkan judul task" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea placeholder="Deskripsi detail task..." rows="4"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Kategori</label>
+                        <select required>
+                            <option value="">Pilih Kategori</option>
+                            <option value="work">💼 Kerja</option>
+                            <option value="personal">👤 Personal</option>
+                            <option value="learning">📚 Belajar</option>
+                            <option value="health">💪 Kesehatan</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Prioritas</label>
+                        <select required>
+                            <option value="">Pilih Prioritas</option>
+                            <option value="high">🔴 Tinggi</option>
+                            <option value="medium">🟡 Sedang</option>
+                            <option value="low">🟢 Rendah</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Deadline</label>
+                    <input type="date" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+                    <button type="submit" class="btn btn-primary">Tambah Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/task-manager.js') }}"></script>
 </body>
 </html>
