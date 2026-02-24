@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProductivityFlow - Capai Target Mu dengan Fokus</title>
-    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-</head>
+@extends('layouts.app')
 <body>
     <!-- Navigation -->
     <nav class="navbar">
@@ -188,7 +180,7 @@
         <div class="cta-content">
             <h2>Siap Meningkatkan Produktivitasmu?</h2>
             <p>Bergabunglah dengan ribuan pengguna yang telah mengubah cara mereka bekerja.</p>
-            <button class="btn btn-primary btn-large">Mulai Gratis Sekarang</button>
+            <button class="btn btn-primary btn-large" onclick="window.location='{{ route('register') }}'">Mulai Gratis Sekarang</button>
             <p class="cta-footer">Tidak perlu kartu kredit. Akses penuh ke semua fitur.</p>
         </div>
     </section>

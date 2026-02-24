@@ -692,3 +692,13 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    -ms-overflow-style: none;  /* IE & Edge */
+    scrollbar-width: none;     /* Firefox */
+}

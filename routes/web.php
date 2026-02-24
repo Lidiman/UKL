@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('index');
+});
 use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
@@ -19,6 +23,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth');
 
-Route::get('/task-manager', function () {
-    return view('task-manager');
-})->middleware('auth');
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+
