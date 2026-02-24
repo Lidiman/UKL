@@ -52,9 +52,9 @@
                 <span class="btn-icon">←</span>
                 Balik ke Landing
             </a>
-            <a href="#" class="btn-action btn-secondary">
-                <span class="btn-icon">⚙</span>
-                Setting Akun
+            <a href="/task-manager" class="btn-action btn-secondary">
+                <span class="btn-icon">📋</span>
+                Task Manager
             </a>
         </div>
 

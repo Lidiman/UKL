@@ -36,6 +36,7 @@
             <div class="nav-right">
                 <ul class="nav-links">
                     <li><a href="/">Landing</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
                     <li><a href="#" class="active">Task Manager</a></li>
                     <li><a href="#" class="profile-btn">👤 Profile</a></li>
                 </ul>
@@ -49,6 +50,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2>📋 Tasks</h2>
+                <a href="/dashboard" class="back-link">← Kembali ke Dashboard</a>
             </div>
             
             <div class="quick-stats">
