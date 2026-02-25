@@ -55,15 +55,15 @@
             
             <div class="quick-stats">
                 <div class="stat-box">
-                    <div class="stat-number">12</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Total Tasks</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-number">7</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Completed</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-number">5</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Pending</div>
                 </div>
             </div>
@@ -120,138 +120,20 @@
                 <div class="progress-card">
                     <div class="progress-header">
                         <h3>Progress Minggu Ini</h3>
-                        <span class="progress-percentage">58%</span>
+                        <span class="progress-percentage">0%</span>
                     </div>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 58%"></div>
+                        <div class="progress-fill" style="width: 0%"></div>
                     </div>
                     <div class="progress-details">
-                        <p><strong>7 dari 12</strong> task telah selesai</p>
+                        <p><strong>0 dari 0</strong> task telah selesai</p>
                     </div>
                 </div>
             </div>
 
             <!-- Tasks Grid -->
             <div class="tasks-container">
-                <!-- Task Card 1 -->
-                <div class="task-card" data-priority="high" data-status="pending">
-                    <div class="task-header">
-                        <div class="task-checkbox">
-                            <input type="checkbox">
-                        </div>
-                        <div class="task-title-section">
-                            <h3 class="task-title">Finish Project Proposal</h3>
-                            <p class="task-description">Selesaikan proposal untuk klien baru sebelum deadline Jumat</p>
-                        </div>
-                        <button class="task-menu">⋮</button>
-                    </div>
-                    
-                    <div class="task-meta">
-                        <span class="priority-badge priority-high">🔴 Tinggi</span>
-                        <span class="category-badge category-work">💼 Kerja</span>
-                        <span class="due-date">📅 Jumat, 28 Feb</span>
-                    </div>
-                </div>
-
-                <!-- Task Card 2 -->
-                <div class="task-card" data-priority="medium" data-status="pending">
-                    <div class="task-header">
-                        <div class="task-checkbox">
-                            <input type="checkbox">
-                        </div>
-                        <div class="task-title-section">
-                            <h3 class="task-title">Team Meeting Review</h3>
-                            <p class="task-description">Diskusi hasil meeting dengan tim tentang roadmap produk</p>
-                        </div>
-                        <button class="task-menu">⋮</button>
-                    </div>
-                    
-                    <div class="task-meta">
-                        <span class="priority-badge priority-medium">🟡 Sedang</span>
-                        <span class="category-badge category-work">💼 Kerja</span>
-                        <span class="due-date">📅 Rabu, 26 Feb</span>
-                    </div>
-                </div>
-
-                <!-- Task Card 3 -->
-                <div class="task-card" data-priority="low" data-status="completed">
-                    <div class="task-header">
-                        <div class="task-checkbox">
-                            <input type="checkbox" checked>
-                        </div>
-                        <div class="task-title-section">
-                            <h3 class="task-title completed">Update Documentation</h3>
-                            <p class="task-description">Perbarui dokumentasi API dengan endpoint terbaru</p>
-                        </div>
-                        <button class="task-menu">⋮</button>
-                    </div>
-                    
-                    <div class="task-meta">
-                        <span class="priority-badge priority-low">🟢 Rendah</span>
-                        <span class="category-badge category-work">💼 Kerja</span>
-                        <span class="due-date">📅 Selasa, 25 Feb</span>
-                    </div>
-                </div>
-
-                <!-- Task Card 4 -->
-                <div class="task-card" data-priority="high" data-status="pending">
-                    <div class="task-header">
-                        <div class="task-checkbox">
-                            <input type="checkbox">
-                        </div>
-                        <div class="task-title-section">
-                            <h3 class="task-title">Morning Workout</h3>
-                            <p class="task-description">Olahraga pagi selama 30 menit untuk kesehatan</p>
-                        </div>
-                        <button class="task-menu">⋮</button>
-                    </div>
-                    
-                    <div class="task-meta">
-                        <span class="priority-badge priority-high">🔴 Tinggi</span>
-                        <span class="category-badge category-health">💪 Kesehatan</span>
-                        <span class="due-date">📅 Harian</span>
-                    </div>
-                </div>
-
-                <!-- Task Card 5 -->
-                <div class="task-card" data-priority="medium" data-status="pending">
-                    <div class="task-header">
-                        <div class="task-checkbox">
-                            <input type="checkbox">
-                        </div>
-                        <div class="task-title-section">
-                            <h3 class="task-title">Learn React Hooks</h3>
-                            <p class="task-description">Pelajari advanced patterns untuk React Hooks</p>
-                        </div>
-                        <button class="task-menu">⋮</button>
-                    </div>
-                    
-                    <div class="task-meta">
-                        <span class="priority-badge priority-medium">🟡 Sedang</span>
-                        <span class="category-badge category-learning">📚 Belajar</span>
-                        <span class="due-date">📅 Minggu Depan</span>
-                    </div>
-                </div>
-
-                <!-- Task Card 6 -->
-                <div class="task-card" data-priority="low" data-status="completed">
-                    <div class="task-header">
-                        <div class="task-checkbox">
-                            <input type="checkbox" checked>
-                        </div>
-                        <div class="task-title-section">
-                            <h3 class="task-title completed">Grocery Shopping</h3>
-                            <p class="task-description">Belanja kebutuhan sehari-hari di supermarket</p>
-                        </div>
-                        <button class="task-menu">⋮</button>
-                    </div>
-                    
-                    <div class="task-meta">
-                        <span class="priority-badge priority-low">🟢 Rendah</span>
-                        <span class="category-badge category-personal">👤 Personal</span>
-                        <span class="due-date">📅 Sabtu, 27 Feb</span>
-                    </div>
-                </div>
+                <!-- Tasks will be loaded dynamically from API -->
             </div>
         </main>
     </div>

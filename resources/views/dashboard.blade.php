@@ -65,17 +65,17 @@
                 <div class="stat-box">
                     <div class="stat-box-icon">📊</div>
                     <h4>Aktivitas Hari Ini</h4>
-                    <p class="stat-box-value">5</p>
+                    <p class="stat-box-value">0</p>
                 </div>
                 <div class="stat-box">
                     <div class="stat-box-icon">✅</div>
                     <h4>Tugas Beres</h4>
-                    <p class="stat-box-value">12</p>
+                    <p class="stat-box-value">0</p>
                 </div>
                 <div class="stat-box">
                     <div class="stat-box-icon">🔔</div>
                     <h4>Notifikasi</h4>
-                    <p class="stat-box-value">3</p>
+                    <p class="stat-box-value">0</p>
                 </div>
             </div>
         </div>
