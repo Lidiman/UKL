@@ -108,15 +108,34 @@ body {
 }
 
 .profile-btn {
-    padding: 0.6rem 1.2rem;
+    padding: 0.4rem 1rem;
     background: var(--primary-gradient);
     color: white;
     border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
 }
 
 .profile-btn:hover {
     background-clip: unset;
     -webkit-text-fill-color: unset;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.profile-avatar-small {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-name {
+    font-weight: 500;
+    font-size: 0.9rem;
 }
 
 /* ==================== Layout ==================== */
@@ -557,6 +576,16 @@ body {
     animation: slideUp 0.3s ease;
 }
 
+/* Hide scrollbar in modal */
+.modal-content::-webkit-scrollbar {
+    display: none;
+}
+
+.modal-content {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
 @keyframes slideUp {
     from {
         transform: translateY(30px);
@@ -565,6 +594,17 @@ body {
     to {
         transform: translateY(0);
         opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(30px);
+        opacity: 0;
     }
 }
 

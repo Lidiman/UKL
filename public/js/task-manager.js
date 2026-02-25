@@ -28,8 +28,17 @@ function openModal() {
 }
 
 function closeModal() {
-    addTaskModal.classList.remove('active');
-    taskForm.reset();
+    const modalContent = addTaskModal.querySelector('.modal-content');
+    
+    // Add closing animation
+    modalContent.style.animation = 'slideDown 0.3s ease forwards';
+    
+    // Wait for animation to complete before hiding modal
+    setTimeout(() => {
+        addTaskModal.classList.remove('active');
+        modalContent.style.animation = 'slideUp 0.3s ease'; // Reset animation for next open
+        taskForm.reset();
+    }, 280);
 }
 
 addTaskBtn.addEventListener('click', openModal);

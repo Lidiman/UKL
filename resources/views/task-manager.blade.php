@@ -38,7 +38,10 @@
                     <li><a href="/">Landing</a></li>
                     <li><a href="/dashboard">Dashboard</a></li>
                     <li><a href="#" class="active">Task Manager</a></li>
-                    <li><a href="#" class="profile-btn">👤 Profile</a></li>
+<li><a href="/dashboard" class="profile-btn">
+                    <img src="{{ Auth::user()->avatar ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(Auth::user()->email))).'?s=150&d=identicon' }}" alt="avatar" class="profile-avatar-small">
+                    <span class="profile-name">{{ Auth::user()->name }}</span>
+                </a></li>
                 </ul>
             </div>
         </div>
