@@ -42,10 +42,10 @@
                     @php
                         $name = urlencode(Auth::user()->name);
                         $email = strtolower(trim(Auth::user()->email));
-                        $gravatarUrl = 'https://www.gravatar.com/avatar/' . md5($email) . '?s=150&d=identicon';
+                        $gravatarUrl = 'https://www.gravatar.com/avatar/' . md5($email) . '?s=32&d=identicon';
                         $avatarUrl = Auth::user()->avatar ?? $gravatarUrl;
                     @endphp
-                    <img src="{{ $avatarUrl }}" alt="avatar" class="profile-avatar-small" onerror="this.src='https://ui-avatars.com/api/?name={{ $name }}&background=667eea&color=fff&size=150'">
+                    <img src="{{ $avatarUrl }}" alt="avatar" class="profile-avatar-small" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.3);" onerror="this.src='https://ui-avatars.com/api/?name={{ $name }}&background=667eea&color=fff&size=28'">
                     <span class="profile-name">{{ Auth::user()->name }}</span>
                 </a></li>
                 </ul>
