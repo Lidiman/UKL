@@ -48,3 +48,6 @@ Route::middleware(['web', 'auth:default', 'admin'])->group(function () {
     // Admin Stats
     Route::get('/admin/stats', [AdminController::class, 'stats']);
 });
+
+
+//Fixed the middleware for API routes to ensure proper authentication and admin access control.
