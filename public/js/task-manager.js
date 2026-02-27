@@ -85,8 +85,10 @@ taskForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    // Generate idempotency key
-    const idempotencyKey = generateIdempotencyKey();
+    // Generate idempotency key only once per form submission attempt
+    if (!currentIdempotencyKey) {
+        currentIdempotencyKey = generateIdempotencyKey();
+    }
     
     // Disable submit button during request
     isSubmitting = true;
@@ -99,7 +101,7 @@ taskForm.addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
-                'X-Idempotency-Key': idempotencyKey,
+                'X-Idempotency-Key': currentIdempotencyKey,
             },
             body: JSON.stringify(formData)
         });
@@ -112,6 +114,8 @@ taskForm.addEventListener('submit', async (e) => {
             closeModal();
             updateStats();
             showNotification('Task berhasil ditambahkan!');
+            // Reset key after successful submission
+            currentIdempotencyKey = null;
         } else if (response.status === 409) {
             showNotification('Permintaan duplikat detected. Task mungkin sudah dibuat.', 'error');
         } else {
