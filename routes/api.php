@@ -3,9 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\AdminController;
 
-// API routes that use session-based authentication
-// Add web middleware to ensure session is started for authentication
+
 Route::middleware(['web', 'auth'])->group(function () {
     // Task API endpoints
     Route::prefix('tasks')->group(function () {
@@ -23,4 +23,28 @@ Route::middleware(['web', 'auth'])->group(function () {
             'data' => $request->user()
         ]);
     });
+});
+
+// Admin API routes (requires admin middleware)
+Route::middleware(['web', 'auth:default', 'admin'])->group(function () {
+    // Admin Users CRUD
+    Route::prefix('admin/users')->group(function () {
+        Route::get('/', [AdminController::class, 'usersIndex']);
+        Route::post('/', [AdminController::class, 'usersStore']);
+        Route::get('/{user}', [AdminController::class, 'usersShow']);
+        Route::put('/{user}', [AdminController::class, 'usersUpdate']);
+        Route::delete('/{user}', [AdminController::class, 'usersDestroy']);
+    });
+
+    // Admin Tasks CRUD
+    Route::prefix('admin/tasks')->group(function () {
+        Route::get('/', [AdminController::class, 'tasksIndex']);
+        Route::post('/', [AdminController::class, 'tasksStore']);
+        Route::get('/{task}', [AdminController::class, 'tasksShow']);
+        Route::put('/{task}', [AdminController::class, 'tasksUpdate']);
+        Route::delete('/{task}', [AdminController::class, 'tasksDestroy']);
+    });
+
+    // Admin Stats
+    Route::get('/admin/stats', [AdminController::class, 'stats']);
 });
