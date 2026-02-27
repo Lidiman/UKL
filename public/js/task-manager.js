@@ -8,9 +8,13 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || 
 // ==================== DOM Elements ====================
 const addTaskBtn = document.querySelector('.btn-add-task');
 const addTaskModal = document.getElementById('addTaskModal');
+const editTaskModal = document.getElementById('editTaskModal');
 const modalCloseBtn = document.querySelector('.modal-close');
+const editModalCloseBtn = document.querySelector('.edit-modal-close');
+const editModalCloseFormBtn = document.querySelector('.edit-modal-close-btn');
 const modalCloseFormBtn = document.querySelector('.modal-close-btn');
 const taskForm = document.querySelector('.task-form');
+const editTaskForm = document.querySelector('.edit-task-form');
 const tasksContainer = document.querySelector('.tasks-container');
 const filterItems = document.querySelectorAll('.filter-item');
 const categoryTags = document.querySelectorAll('.category-tag');
@@ -54,6 +58,37 @@ modalCloseFormBtn.addEventListener('click', closeModal);
 
 addTaskModal.addEventListener('click', (e) => {
     if (e.target === addTaskModal) closeModal();
+});
+
+// Edit Modal Functions
+function openEditModal(task) {
+    document.getElementById('editTaskId').value = task.id;
+    document.getElementById('editTaskTitle').value = task.title;
+    document.getElementById('editTaskDescription').value = task.description || '';
+    document.getElementById('editTaskCategory').value = task.category;
+    document.getElementById('editTaskPriority').value = task.priority;
+    document.getElementById('editTaskDueDate').value = task.due_date;
+    document.getElementById('editTaskStatus').value = task.status;
+    
+    editTaskModal.classList.add('active');
+}
+
+function closeEditModal() {
+    const modalContent = editTaskModal.querySelector('.modal-content');
+    modalContent.style.animation = 'slideDown 0.3s ease forwards';
+    
+    setTimeout(() => {
+        editTaskModal.classList.remove('active');
+        modalContent.style.animation = 'slideUp 0.3s ease';
+        editTaskForm.reset();
+    }, 280);
+}
+
+editModalCloseBtn.addEventListener('click', closeEditModal);
+editModalCloseFormBtn.addEventListener('click', closeEditModal);
+
+editTaskModal.addEventListener('click', (e) => {
+    if (e.target === editTaskModal) closeEditModal();
 });
 
 // ==================== Idempotency Key ====================
@@ -293,7 +328,11 @@ function showTaskMenu(taskCard, taskId) {
     
     menu.querySelector('.edit-task').addEventListener('click', () => {
         menu.remove();
-        showNotification('Fitur edit sedang dikembangkan!');
+        // Find the task data from allTasks array
+        const task = allTasks.find(t => t.id === taskId);
+        if (task) {
+            openEditModal(task);
+        }
     });
     
     // Close menu when clicking outside
@@ -330,6 +369,80 @@ async function deleteTask(taskId, taskCard) {
         showNotification('Terjadi kesalahan', 'error');
     }
 }
+
+// ==================== Edit Task Form Submission ====================
+let isEditSubmitting = false;
+
+editTaskForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (isEditSubmitting) {
+        showNotification('Permintaan sedang diproses...', 'error');
+        return;
+    }
+    
+    const taskId = document.getElementById('editTaskId').value;
+    const submitBtn = editTaskForm.querySelector('button[type="submit"]');
+    
+    const formData = {
+        title: document.getElementById('editTaskTitle').value,
+        description: document.getElementById('editTaskDescription').value,
+        category: document.getElementById('editTaskCategory').value,
+        priority: document.getElementById('editTaskPriority').value,
+        due_date: document.getElementById('editTaskDueDate').value,
+        status: document.getElementById('editTaskStatus').value,
+    };
+    
+    if (!formData.title || !formData.category || !formData.priority || !formData.due_date || !formData.status) {
+        showNotification('Mohon lengkapi semua field yang diperlukan!', 'error');
+        return;
+    }
+
+    isEditSubmitting = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Menyimpan...';
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/${taskId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Update task in allTasks array
+            const taskIndex = allTasks.findIndex(t => t.id === parseInt(taskId));
+            if (taskIndex !== -1) {
+                allTasks[taskIndex] = result.data;
+            }
+            
+            // Recreate task card with updated data
+            const existingCard = document.querySelector(`[data-task-id="${taskId}"]`);
+            if (existingCard) {
+                existingCard.remove();
+            }
+            createTaskCard(result.data);
+            
+            closeEditModal();
+            updateStats();
+            showNotification('Task berhasil diperbarui!');
+        } else {
+            showNotification('Gagal memperbarui task: ' + (result.message || 'Unknown error'), 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Terjadi kesalahan saat memperbarui task', 'error');
+    } finally {
+        isEditSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Simpan Perubahan';
+    }
+});
 
 // ==================== Filter Functions ====================
 filterItems.forEach(item => {
