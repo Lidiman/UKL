@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 
+    <!-- Boxicons CDN -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     <!-- font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -80,11 +83,15 @@
             <!-- tombol aksi -->
             <div class="action-buttons">
                 <a href="/" class="btn-action btn-primary">
-                    <span class="btn-icon">←</span>
+                    <span class="btn-icon">
+                        <i class='bx bx-arrow-back'></i>
+                    </span>
                     Balik ke Landing
                 </a>
                 <a href="/task-manager" class="btn-action btn-secondary">
-                    <span class="btn-icon">📋</span>
+                    <span class="btn-icon">
+                        <i class='bx bx-task'></i>
+                    </span>
                     Task Manager
                 </a>
             </div>
@@ -94,17 +101,23 @@
                 <h3>Statistik Cepat</h3>
                 <div class="stats-grid">
                     <div class="stat-box">
-                        <div class="stat-box-icon">📊</div>
+                        <div class="stat-box-icon">
+                            <i class='bx bx-bar-chart-alt-2'></i>
+                        </div>
                         <h4>Aktivitas Hari Ini</h4>
                         <p class="stat-box-value">5</p>
                     </div>
                     <div class="stat-box">
-                        <div class="stat-box-icon">✅</div>
+                        <div class="stat-box-icon">
+                            <i class='bx bx-check-circle'></i>
+                        </div>
                         <h4>Tugas Beres</h4>
                         <p class="stat-box-value">12</p>
                     </div>
                     <div class="stat-box">
-                        <div class="stat-box-icon">🔔</div>
+                        <div class="stat-box-icon">
+                            <i class='bx bx-bell'></i>
+                        </div>
                         <h4>Notifikasi</h4>
                         <p class="stat-box-value">3</p>
                     </div>
