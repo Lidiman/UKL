@@ -4,13 +4,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 
-Route::middleware('auth:sanctum')->group(function () {
+// API routes that use session-based authentication
+// Add web middleware to ensure session is started for authentication
+Route::middleware(['web', 'auth'])->group(function () {
     // Task API endpoints
     Route::prefix('tasks')->group(function () {
         Route::get('/', [TaskController::class, 'index']);          // Get all tasks
         Route::post('/', [TaskController::class, 'store']);         // Create task
-        Route::put('{task}', [TaskController::class, 'update']);    // Update task
-        Route::delete('{task}', [TaskController::class, 'destroy']); // Delete task
+        Route::put('/{task}', [TaskController::class, 'update']);    // Update task
+        Route::delete('/{task}', [TaskController::class, 'destroy']); // Delete task
         Route::get('/stats', [TaskController::class, 'stats']);     // Get task stats
     });
 

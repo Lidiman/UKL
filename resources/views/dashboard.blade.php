@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 
-    <!-- Boxicons CDN -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
     <!-- font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -40,58 +37,54 @@
     <section class="dashboard-section">
         <div class="container">
 
-            <!-- sambutan -->
-            <div class="welcome-header">
-                <h1>Selamat Datang, {{ Auth::user()->name }}!</h1>
-                <p>Ringkasan aktivitas kamu ada di sini</p>
-            </div>
+        <!-- sambutan -->
+        <div class="welcome-header">
+            <h1>Selamat Datang, {{ Auth::user()->name }}!</h1>
+            <p>Ringkasan aktivitas kamu ada di sini</p>
+        </div>
 
-            <!-- kartu profil -->
-            <div class="profile-section" id="profile">
-                <div class="profile-card">
-                    <div class="profile-header">
-                        <img 
-                            src="{{ Auth::user()->avatar ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(Auth::user()->email))).'?s=150&d=identicon' }}" 
-                            alt="avatar" 
-                            class="profile-avatar"
-                        >
-                        <div class="profile-info">
-                            <h2>{{ Auth::user()->name }}</h2>
-                            <p class="profile-email">{{ Auth::user()->email }}</p>
-                            <span class="profile-badge">Member</span>
-                        </div>
+        <!-- kartu profil -->
+        <div class="profile-section" id="profile">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <img 
+                        src="{{ Auth::user()->avatar ?? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim(Auth::user()->email))).'?s=150&d=identicon' }}" 
+                        alt="avatar" 
+                        class="profile-avatar"
+                    >
+                    <div class="profile-info">
+                        <h2>{{ Auth::user()->name }}</h2>
+                        <p class="profile-email">{{ Auth::user()->email }}</p>
+                        <span class="profile-badge">Member</span>
                     </div>
+                </div>
 
-                    <!-- statistik singkat -->
-                    <div class="profile-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">0</div>
-                            <div class="stat-label">Proyek</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">0</div>
-                            <div class="stat-label">Tugas</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">0</div>
-                            <div class="stat-label">Tim</div>
-                        </div>
+                <!-- statistik singkat -->
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Proyek</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Tugas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Tim</div>
                     </div>
                 </div>
             </div>
+        </div>
 
             <!-- tombol aksi -->
             <div class="action-buttons">
                 <a href="/" class="btn-action btn-primary">
-                    <span class="btn-icon">
-                        <i class='bx bx-arrow-back'></i>
-                    </span>
+                    <span class="btn-icon">←</span>
                     Balik ke Landing
                 </a>
                 <a href="/task-manager" class="btn-action btn-secondary">
-                    <span class="btn-icon">
-                        <i class='bx bx-task'></i>
-                    </span>
+                    <span class="btn-icon">📋</span>
                     Task Manager
                 </a>
             </div>

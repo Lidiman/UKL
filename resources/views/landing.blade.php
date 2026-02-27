@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -10,6 +11,9 @@
     <!-- Boxicons CDN -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
+=======
+@extends('layouts.app')
+>>>>>>> dcbf53264f28ad028107a4a7b17694544d3fcb4f
 <body>
 
     <!-- Navigation -->
@@ -216,7 +220,7 @@
         <div class="cta-content">
             <h2>Siap Meningkatkan Produktivitasmu?</h2>
             <p>Bergabunglah dengan ribuan pengguna yang telah mengubah cara mereka bekerja.</p>
-            <button class="btn btn-primary btn-large">Mulai Gratis Sekarang</button>
+            <button class="btn btn-primary btn-large" onclick="window.location='{{ route('register') }}'">Mulai Gratis Sekarang</button>
             <p class="cta-footer">Tidak perlu kartu kredit. Akses penuh ke semua fitur.</p>
         </div>
     </section>
