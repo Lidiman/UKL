@@ -165,7 +165,7 @@
         </main>
     </div>
 
-    <!-- Modal -->
+    <!-- Add Task Modal -->
     <div class="modal" id="addTaskModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -174,10 +174,24 @@
             </div>
 
             <form class="task-form">
+                <div class="form-group">
+                    <label>Judul Task</label>
+                    <input type="text" id="taskTitle" placeholder="Masukkan judul task" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea id="taskDescription" placeholder="Deskripsi task (opsional)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Tanggal Deadline</label>
+                    <input type="date" id="taskDueDate" required>
+                </div>
 
                 <div class="form-group">
                     <label>Kategori</label>
-                    <select required>
+                    <select id="taskCategory" required>
                         <option value="work">Kerja</option>
                         <option value="personal">Personal</option>
                         <option value="learning">Belajar</option>
@@ -187,7 +201,7 @@
 
                 <div class="form-group">
                     <label>Prioritas</label>
-                    <select required>
+                    <select id="taskPriority" required>
                         <option value="high">Tinggi</option>
                         <option value="medium">Sedang</option>
                         <option value="low">Rendah</option>
@@ -195,12 +209,74 @@
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary">Batal</button>
+                    <button type="button" class="modal-close-btn btn btn-secondary">Batal</button>
                     <button type="submit" class="btn btn-primary">
                         <i class='bx bx-plus'></i> Tambah Task
                     </button>
                 </div>
+            </form>
+        </div>
+    </div>
 
+    <!-- Edit Task Modal -->
+    <div class="modal" id="editTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+                <button class="edit-modal-close">&times;</button>
+            </div>
+
+            <form class="edit-task-form">
+                <input type="hidden" id="editTaskId">
+
+                <div class="form-group">
+                    <label>Judul Task</label>
+                    <input type="text" id="editTaskTitle" placeholder="Masukkan judul task" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea id="editTaskDescription" placeholder="Deskripsi task (opsional)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Tanggal Deadline</label>
+                    <input type="date" id="editTaskDueDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="editTaskCategory" required>
+                        <option value="work">Kerja</option>
+                        <option value="personal">Personal</option>
+                        <option value="learning">Belajar</option>
+                        <option value="health">Kesehatan</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Prioritas</label>
+                    <select id="editTaskPriority" required>
+                        <option value="high">Tinggi</option>
+                        <option value="medium">Sedang</option>
+                        <option value="low">Rendah</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="editTaskStatus" required>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="edit-modal-close-btn btn btn-secondary">Batal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class='bx bx-save'></i> Simpan Perubahan
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -208,3 +284,4 @@
     <script src="{{ asset('js/task-manager.js') }}"></script>
 </body>
 </html>
+

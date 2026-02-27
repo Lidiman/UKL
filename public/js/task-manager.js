@@ -108,11 +108,11 @@ taskForm.addEventListener('submit', async (e) => {
     
     const submitBtn = taskForm.querySelector('button[type="submit"]');
     const formData = {
-        title: taskForm.querySelector('input[placeholder="Masukkan judul task"]').value,
-        description: taskForm.querySelector('textarea').value,
-        category: taskForm.querySelectorAll('select')[0].value,
-        priority: taskForm.querySelectorAll('select')[1].value,
-        due_date: taskForm.querySelector('input[type="date"]').value,
+        title: document.getElementById('taskTitle').value,
+        description: document.getElementById('taskDescription').value,
+        category: document.getElementById('taskCategory').value,
+        priority: document.getElementById('taskPriority').value,
+        due_date: document.getElementById('taskDueDate').value,
     };
     
     if (!validateFormData(formData)) {
