@@ -59,19 +59,19 @@
                 <label>Category</label>
                 <select id="taskCategory" required>
                     <option value="">Select Category</option>
-                    <option value="work">💼 Work</option>
-                    <option value="personal">👤 Personal</option>
-                    <option value="learning">📚 Learning</option>
-                    <option value="health">💪 Health</option>
+                    <option value="work"><i class="bx bx-briefcase"></i> Work</option>
+                    <option value="personal"><i class="bx bx-user"></i> Personal</option>
+                    <option value="learning"><i class="bx bx-book"></i> Learning</option>
+                    <option value="health"><i class="bx bx-dumbbell"></i> Health</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Priority</label>
                 <select id="taskPriority" required>
                     <option value="">Select Priority</option>
-                    <option value="high">🔴 High</option>
-                    <option value="medium">🟡 Medium</option>
-                    <option value="low">🟢 Low</option>
+                    <option value="high"><i class="bxs bxs-circle" style="color: #ff4444;"></i> High</option>
+                    <option value="medium"><i class="bxs bxs-circle" style="color: #ffbb00;"></i> Medium</option>
+                    <option value="low"><i class="bxs bxs-circle" style="color: #44dd44;"></i> Low</option>
                 </select>
             </div>
             <div class="form-group">

@@ -414,14 +414,14 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-logo">
-            <h2>⚙️ Admin Panel</h2>
+            <h2><i class="bx bx-cog"></i> Admin Panel</h2>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="/admin" class="{{ request()->is('admin') ? 'active' : '' }}">📊 Dashboard</a></li>
-            <li><a href="/admin/users" class="{{ request()->is('admin/users') ? 'active' : '' }}">👥 Users</a></li>
-            <li><a href="/admin/tasks" class="{{ request()->is('admin/tasks') ? 'active' : '' }}">📋 Tasks</a></li>
-            <li><a href="/task-manager" target="_blank">📝 Task Manager</a></li>
-            <li><a href="/" class="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">🚪 Logout</a></li>
+            <li><a href="/admin" class="{{ request()->is('admin') ? 'active' : '' }}"><i class="bx bx-bar-chart-alt-2"></i> Dashboard</a></li>
+            <li><a href="/admin/users" class="{{ request()->is('admin/users') ? 'active' : '' }}"><i class="bx bx-user-circle"></i> Users</a></li>
+            <li><a href="/admin/tasks" class="{{ request()->is('admin/tasks') ? 'active' : '' }}"><i class="bx bx-list-check"></i> Tasks</a></li>
+            <li><a href="/task-manager" target="_blank"><i class="bx bx-notepad"></i> Task Manager</a></li>
+            <li><a href="/" class="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bx bx-log-out"></i> Logout</a></li>
         </ul>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
