@@ -21,6 +21,7 @@ const sortSelect = document.querySelector('.sort-select');
 let allTasks = [];
 let currentFilter = 'all';
 let currentCategory = 'all';
+let isSubmitting = false;
 
 // ==================== Modal Functions ====================
 function openModal() {
@@ -49,10 +50,22 @@ addTaskModal.addEventListener('click', (e) => {
     if (e.target === addTaskModal) closeModal();
 });
 
+// ==================== Idempotency Key ====================
+function generateIdempotencyKey() {
+    return 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
 // ==================== Form Submission ====================
 taskForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
+    // Prevent double submission
+    if (isSubmitting) {
+        showNotification('Permintaan sedang diproses...', 'error');
+        return;
+    }
+    
+    const submitBtn = taskForm.querySelector('button[type="submit"]');
     const formData = {
         title: taskForm.querySelector('input[placeholder="Masukkan judul task"]').value,
         description: taskForm.querySelector('textarea').value,
@@ -66,12 +79,21 @@ taskForm.addEventListener('submit', async (e) => {
         return;
     }
 
+    // Generate idempotency key
+    const idempotencyKey = generateIdempotencyKey();
+    
+    // Disable submit button during request
+    isSubmitting = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Menyimpan...';
+
     try {
         const response = await fetch(API_BASE_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
+                'X-Idempotency-Key': idempotencyKey,
             },
             body: JSON.stringify(formData)
         });
@@ -84,12 +106,19 @@ taskForm.addEventListener('submit', async (e) => {
             closeModal();
             updateStats();
             showNotification('Task berhasil ditambahkan!');
+        } else if (response.status === 409) {
+            showNotification('Permintaan duplikat detected. Task mungkin sudah dibuat.', 'error');
         } else {
             showNotification('Gagal menambahkan task: ' + (result.message || 'Unknown error'), 'error');
         }
     } catch (error) {
         console.error('Error:', error);
         showNotification('Terjadi kesalahan saat menambahkan task', 'error');
+    } finally {
+        // Re-enable submit button
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Tambah Task';
     }
 });
 

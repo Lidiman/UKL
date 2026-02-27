@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
 {
@@ -24,6 +25,23 @@ class TaskController extends Controller
     // Create new task
     public function store(Request $request)
     {
+        // Idempotency key validation
+        $idempotencyKey = $request->header('X-Idempotency-Key');
+        
+        if ($idempotencyKey) {
+            $cacheKey = 'idempotency_' . $idempotencyKey;
+            
+            // Check if this request has already been processed
+            if (Cache::has($cacheKey)) {
+                // Return the cached response (previous successful result)
+                return response()->json([
+                    'success' => true,
+                    'data' => Cache::get($cacheKey),
+                    'message' => 'Task already created (idempotent response)'
+                ], 201);
+            }
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -37,6 +55,11 @@ class TaskController extends Controller
             ...$validated,
             'status' => 'pending'
         ]);
+
+        // Store successful response in cache with 24-hour expiration
+        if ($idempotencyKey) {
+            Cache::put($cacheKey, $task->toArray(), now()->addHours(24));
+        }
 
         return response()->json([
             'success' => true,
