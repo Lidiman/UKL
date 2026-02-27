@@ -22,10 +22,14 @@ let allTasks = [];
 let currentFilter = 'all';
 let currentCategory = 'all';
 let isSubmitting = false;
+let currentIdempotencyKey = null;
 
 // ==================== Modal Functions ====================
 function openModal() {
     addTaskModal.classList.add('active');
+    // Reset idempotency key for new form
+    currentIdempotencyKey = null;
+    isSubmitting = false;
 }
 
 function closeModal() {
@@ -39,6 +43,8 @@ function closeModal() {
         addTaskModal.classList.remove('active');
         modalContent.style.animation = 'slideUp 0.3s ease'; // Reset animation for next open
         taskForm.reset();
+        currentIdempotencyKey = null;
+        isSubmitting = false;
     }, 280);
 }
 
