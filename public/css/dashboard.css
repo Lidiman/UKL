@@ -217,7 +217,17 @@
     margin-bottom: 0.75rem;
 }
 
-.stat-box-value, .stat-box-value-done {
+.stat-box-value{
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.stat-box-value-done {
     font-size: 2.5rem;
     font-weight: 700;
     background: var(--primary-gradient);
