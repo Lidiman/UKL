@@ -7,7 +7,6 @@ use App\Http\Controllers\AdminController;
 
 
 Route::middleware(['web', 'auth'])->group(function () {
-    // Task API endpoints
     Route::prefix('tasks')->group(function () {
         Route::get('/', [TaskController::class, 'index']);          // Get all tasks
         Route::post('/', [TaskController::class, 'store']);         // Create task
@@ -16,7 +15,6 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/stats', [TaskController::class, 'stats']);     // Get task stats
     });
 
-    // User info endpoint
     Route::get('/user', function (Request $request) {
         return response()->json([
             'success' => true,

@@ -106,7 +106,7 @@
     transform: translateY(-2px);
 }
 
-.stat-value {
+.stat-project, .stat-task, .stat-completed {
     font-size: 2rem;
     font-weight: 700;
     color: var(--highlight-color);
@@ -217,7 +217,7 @@
     margin-bottom: 0.75rem;
 }
 
-.stat-box-value {
+.stat-box-value, .stat-box-value-done {
     font-size: 2.5rem;
     font-weight: 700;
     background: var(--primary-gradient);

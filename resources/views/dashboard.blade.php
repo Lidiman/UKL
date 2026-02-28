@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - ProductivityFlow</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- style utama -->
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
@@ -65,16 +65,16 @@
                     <!-- statistik singkat -->
                     <div class="profile-stats">
                         <div class="stat-item">
-                            <div class="stat-value">0</div>
-                            <div class="stat-label">Proyek</div>
+                            <div class="stat-project">0</div>
+                            <div class="stat-label">Project</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">0</div>
-                            <div class="stat-label">Tugas</div>
+                            <div class="stat-task">0</div>
+                            <div class="stat-label">Task</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">0</div>
-                            <div class="stat-label">Tim</div>
+                            <div class="stat-completed">0</div>
+                            <div class="stat-label">Completed</div>
                         </div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                             <i class='bx bx-check-circle'></i>
                         </div>
                         <h4>Tugas Beres</h4>
-                        <p class="stat-box-value">12</p>
+                        <p class="stat-box-value-done">12</p>
                     </div>
                     <div class="stat-box">
                         <div class="stat-box-icon">
@@ -126,6 +126,8 @@
 
         </div>
     </section>
+
+<script src="{{ asset('js/dashboard.js') }}"></script>
 
 </body>
 </html>

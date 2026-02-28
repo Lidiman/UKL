@@ -120,6 +120,19 @@ class TaskController extends Controller
     {
         $userId = auth()->id();
         $totalTasks = Task::where('user_id', $userId)->count();
+        $belajar = Task::where('user_id', $userId)
+                ->where('category', 'learning')->count();
+        $taskbelajar = $totalTasks > 0 ? ($belajar / $totalTasks) : 0;
+        $olahraga = Task::where('user_id', $userId)
+                ->where('category', 'olahraga')->count();
+        $taskolahraga = $totalTasks > 0 ? ($olahraga / $totalTasks) : 0;
+        $personal = Task::where('user_id', $userId)
+                ->where('category', 'personal')->count();
+        $taskpersonal = $totalTasks > 0 ? ($personal / $totalTasks) : 0;
+
+        $work = Task::where('user_id', $userId)
+                ->where('category', 'work')->count();
+        $taskwork = $totalTasks > 0 ? ($work / $totalTasks) : 0;
         $completedTasks = Task::where('user_id', $userId)
             ->where('status', 'completed')
             ->count();
@@ -129,9 +142,16 @@ class TaskController extends Controller
             'success' => true,
             'data' => [
                 'total' => $totalTasks,
+                'work_total' => $work,
+                'personal_total' => $personal,
+                'learning_total' => $belajar,
+                'olahraga_total' => $olahraga,
                 'completed' => $completedTasks,
                 'pending' => $pendingTasks,
-                'percentage' => $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0
+                'taskbelajar_percent' => $taskbelajar,
+                'taskolahraga_percent' => $taskolahraga,
+                'taskpersonal_percent' => $taskpersonal,
+                'taskwork_percent' => $taskwork,
             ]
         ]);
     }
