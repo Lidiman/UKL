@@ -5,38 +5,36 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Task extends Model
+class Project extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'project_id',
-        'title',
+        'name',
         'description',
-        'category',
-        'priority',
-        'due_date',
         'status',
-        'is_single_task',
     ];
 
     protected $casts = [
-        'due_date' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * Get the user that owns the project.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * Get the project that owns the task.
+     * Get the tasks for the project.
      */
-    public function project()
+    public function tasks()
     {
-        return $this->belongsTo(Project::class);
+        return $this->hasMany(Task::class);
     }
 }
+

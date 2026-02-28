@@ -48,7 +48,16 @@ class TaskController extends Controller
             'category' => 'required|in:work,personal,learning,health',
             'priority' => 'required|in:low,medium,high',
             'due_date' => 'required|date',
+            'project_id' => 'nullable|exists:projects,id',
+            'is_single_task' => 'nullable|boolean',
         ]);
+
+        // If project_id is provided, set is_single_task to false
+        if (!empty($validated['project_id'])) {
+            $validated['is_single_task'] = false;
+        } else {
+            $validated['is_single_task'] = $validated['is_single_task'] ?? true;
+        }
 
         $task = Task::create([
             'user_id' => auth()->id(),
@@ -86,7 +95,19 @@ class TaskController extends Controller
             'priority' => 'in:low,medium,high',
             'due_date' => 'date',
             'status' => 'in:pending,completed',
+            'project_id' => 'nullable|exists:projects,id',
+            'is_single_task' => 'nullable|boolean',
         ]);
+
+        // If project_id is provided, set is_single_task to false
+        if (isset($validated['project_id']) && !empty($validated['project_id'])) {
+            $validated['is_single_task'] = false;
+        } elseif (!isset($validated['project_id'])) {
+            // Keep existing is_single_task if not provided
+            unset($validated['is_single_task']);
+        } else {
+            $validated['is_single_task'] = true;
+        }
 
         $task->update($validated);
 

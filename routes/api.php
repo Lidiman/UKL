@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProjectController;
 
 
 Route::middleware(['web', 'auth'])->group(function () {
@@ -12,7 +13,16 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::post('/', [TaskController::class, 'store']);         // Create task
         Route::put('/{task}', [TaskController::class, 'update']);    // Update task
         Route::delete('/{task}', [TaskController::class, 'destroy']); // Delete task
-        Route::get('/stats', [TaskController::class, 'stats']);     // Get task stats
+        Route::get('/stats', [TaskController::class, 'stats']);      // Get task stats
+    });
+
+    // Projects routes
+    Route::prefix('projects')->group(function () {
+        Route::get('/', [ProjectController::class, 'index']);        // Get all projects
+        Route::post('/', [ProjectController::class, 'store']);       // Create project
+        Route::get('/{project}', [ProjectController::class, 'show']); // Get single project
+        Route::put('/{project}', [ProjectController::class, 'update']); // Update project
+        Route::delete('/{project}', [ProjectController::class, 'destroy']); // Delete project
     });
 
     Route::get('/user', function (Request $request) {
