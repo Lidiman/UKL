@@ -117,42 +117,42 @@ class TaskController extends Controller
 
     // Get task stats
     public function stats()
-    {
-        $userId = auth()->id();
-        $totalTasks = Task::where('user_id', $userId)->count();
-        $belajar = Task::where('user_id', $userId)
-                ->where('category', 'learning')->count();
-        $taskbelajar = $totalTasks > 0 ? ($belajar / $totalTasks) : 0;
-        $olahraga = Task::where('user_id', $userId)
-                ->where('category', 'olahraga')->count();
-        $taskolahraga = $totalTasks > 0 ? ($olahraga / $totalTasks) : 0;
-        $personal = Task::where('user_id', $userId)
-                ->where('category', 'personal')->count();
-        $taskpersonal = $totalTasks > 0 ? ($personal / $totalTasks) : 0;
+{
+    $userId = auth()->id();
 
-        $work = Task::where('user_id', $userId)
-                ->where('category', 'work')->count();
-        $taskwork = $totalTasks > 0 ? ($work / $totalTasks) : 0;
-        $completedTasks = Task::where('user_id', $userId)
-            ->where('status', 'completed')
-            ->count();
-        $pendingTasks = $totalTasks - $completedTasks;
+    $tasks = Task::where('user_id', $userId)->get();
+    $totalTasks = $tasks->count();
 
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'total' => $totalTasks,
-                'work_total' => $work,
-                'personal_total' => $personal,
-                'learning_total' => $belajar,
-                'olahraga_total' => $olahraga,
-                'completed' => $completedTasks,
-                'pending' => $pendingTasks,
-                'taskbelajar_percent' => $taskbelajar,
-                'taskolahraga_percent' => $taskolahraga,
-                'taskpersonal_percent' => $taskpersonal,
-                'taskwork_percent' => $taskwork,
-            ]
-        ]);
-    }
+    $work = $tasks->where('category', 'work')->count();
+    $personal = $tasks->where('category', 'personal')->count();
+    $learning = $tasks->where('category', 'learning')->count();
+    $health = $tasks->where('category', 'health')->count();
+
+    $completedTasks = $tasks->where('status', 'completed')->count();
+    $pendingTasks = $totalTasks - $completedTasks;
+
+    $calculatePercent = function ($value) use ($totalTasks) {
+        return $totalTasks > 0 ? round(($value / $totalTasks) * 100, 2) : 0;
+    };
+
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'total' => $totalTasks,
+
+            'work_total' => $work,
+            'personal_total' => $personal,
+            'learning_total' => $learning,
+            'health_total' => $health,
+
+            'completed' => $completedTasks,
+            'pending' => $pendingTasks,
+
+            'taskwork_percent' => $calculatePercent($work),
+            'taskpersonal_percent' => $calculatePercent($personal),
+            'tasklearning_percent' => $calculatePercent($learning),
+            'taskhealth_percent' => $calculatePercent($health),
+        ]
+    ]);
+}
 }
