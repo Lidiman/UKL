@@ -112,7 +112,9 @@
                             <i class='bx bx-check-circle'></i>
                         </div>
                         <h4>Tugas Beres</h4>
-                        <p class="stat-box-value-done">12</p>
+                        <p class="stat-box-value-done" style='font-size: 2.5rem; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;'>
+                            
+                        </p>
                     </div>
                     <div class="stat-box">
                         <div class="stat-box-icon">
