@@ -65,15 +65,24 @@
                     <!-- statistik singkat -->
                     <div class="profile-stats">
                         <div class="stat-item">
-                            <div class="stat-project">0</div>
+                            <div class="stat-project" style="font-size: 2rem;
+    font-weight: 700;
+    color: var(--highlight-color);
+    margin-bottom: 0.5rem;">0</div>
                             <div class="stat-label">Project</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-task">0</div>
+                            <div class="stat-task" style="font-size: 2rem;
+    font-weight: 700;
+    color: var(--highlight-color);
+    margin-bottom: 0.5rem;">0</div>
                             <div class="stat-label">Task</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-completed">0</div>
+                            <div class="stat-completed" style="font-size: 2rem;
+    font-weight: 700;
+    color: var(--highlight-color);
+    margin-bottom: 0.5rem;">0</div>
                             <div class="stat-label">Completed</div>
                         </div>
                     </div>
@@ -113,7 +122,7 @@
                         </div>
                         <h4>Tugas Beres</h4>
                         <p class="stat-box-value-done" style='font-size: 2.5rem; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;'>
-                            
+
                         </p>
                     </div>
                     <div class="stat-box">
