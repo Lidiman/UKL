@@ -33,7 +33,7 @@ async function updateStats() {
 
         if (result.success && projects.success) {
             const stats = result.data;
-            document.querySelector('.stat-project').textContent = projects.data.length;
+            document.querySelector('.stat-project').textContent = projects.total;
             document.querySelector('.stat-task').textContent = stats.total;
             document.querySelector('.stat-completed').textContent = stats.completed;
             StatBoxDone.textContent = stats.completed
