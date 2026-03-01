@@ -227,7 +227,7 @@
     margin: 0;
 }
 
-.stat-box-value-done {
+.stat-box-value-done, .stat-box-value-notification {
     font-size: 2.5rem;
     font-weight: 700;
     background: var(--primary-gradient);

@@ -130,7 +130,7 @@
                             <i class='bx bx-bell'></i>
                         </div>
                         <h4>Notifikasi</h4>
-                        <p class="stat-box-value">3</p>
+                        <p class="stat-box-value-notification">3</p>
                     </div>
                 </div>
             </div>

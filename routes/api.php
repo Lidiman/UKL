@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProjectController;
-
+use App\Http\Controllers\NotificationController;
 
 Route::middleware(['web', 'auth'])->group(function () {
     Route::prefix('tasks')->group(function () {
@@ -23,6 +23,13 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/{project}', [ProjectController::class, 'show']); 
         Route::put('/{project}', [ProjectController::class, 'update']); 
         Route::delete('/{project}', [ProjectController::class, 'destroy']);
+    });
+
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index']);        
+        Route::post('/', [NotificationController::class, 'store']);       
+        Route::put('/{notification}', [NotificationController::class, 'update']); 
+        Route::delete('/{notification}', [NotificationController::class, 'destroy']);
     });
 
     Route::get('/user', function (Request $request) {
