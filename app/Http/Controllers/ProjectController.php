@@ -16,9 +16,12 @@ class ProjectController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $count = $projects->count();
+
         return response()->json([
             'success' => true,
             'data' => $projects,
+            'total' => $count,
             'message' => 'Projects retrieved successfully'
         ]);
     }

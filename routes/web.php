@@ -6,7 +6,7 @@ use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('landing');
-});
+})->middleware('auth');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');

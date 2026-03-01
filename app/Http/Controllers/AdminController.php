@@ -72,7 +72,7 @@ class AdminController extends Controller
         ]);
     }
 
-    // Update user
+    
     public function usersUpdate(Request $request, User $user)
     {
         $validated = $request->validate([
