@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('least_worked_on');
             $table->integer('total_tasks');
             $table->date('most_active_day');
-            $table->timestamps();
+            $table->timestamps('created_at');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
