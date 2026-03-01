@@ -1,12 +1,8 @@
 // ==================== API Configuration ====================
 const API_STATS_URL = '/api/tasks/stats';
-
-//Contoh penggunaan API untuk mendapatkan daftar proyek (jika diperlukan)
 const API_PROJECT_URL = '/api/projects';
 
-// Get CSRF token from meta tag
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
-
 const StatProject = document.querySelector('.stat-project');
 const StatTask = document.querySelector('.stat-task');
 const StatCompleated = document.querySelector('.stat-completed');
