@@ -1,6 +1,4 @@
 import './bootstrap';
-<<<<<<< HEAD
-=======
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -38,4 +36,3 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
->>>>>>> main
