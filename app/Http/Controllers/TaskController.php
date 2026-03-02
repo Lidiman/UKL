@@ -174,6 +174,7 @@ class TaskController extends Controller
             'taskpersonal_percent' => $calculatePercent($personal),
             'tasklearning_percent' => $calculatePercent($learning),
             'taskhealth_percent' => $calculatePercent($health),
+            'urgent_task' => $UrgentTasks,
         ]
     ]);
 }
