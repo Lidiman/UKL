@@ -143,6 +143,7 @@ class TaskController extends Controller
 
     $tasks = Task::where('user_id', $userId)->get();
     $totalTasks = $tasks->count();
+    $UrgentTasks = $tasks->where('priority', 'high')->where('status', 'pending')->count();
 
     $work = $tasks->where('category', 'work')->count();
     $personal = $tasks->where('category', 'personal')->count();
