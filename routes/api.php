@@ -26,9 +26,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     });
 
     Route::prefix('notifications')->group(function () {
-        Route::get('/', [NotificationController::class, 'index']);        
-        Route::post('/', [NotificationController::class, 'store']);       
-        Route::put('/{notification}', [NotificationController::class, 'update']); 
+        Route::get('/', [NotificationController::class, 'index']);
         Route::delete('/{notification}', [NotificationController::class, 'destroy']);
     });
 

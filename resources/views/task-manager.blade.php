@@ -62,15 +62,15 @@
 
             <div class="quick-stats">
                 <div class="stat-box">
-                    <div class="stat-number">12</div>
+                    <div class="stat-number"></div>
                     <div class="stat-label">Total Tasks</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-number">7</div>
+                    <div class="stat-number"></div>
                     <div class="stat-label">Completed</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-number">5</div>
+                    <div class="stat-number"></div>
                     <div class="stat-label">Pending</div>
                 </div>
             </div>
