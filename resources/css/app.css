@@ -9,8 +9,6 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
-<<<<<<< HEAD
-=======
 
 /* LOADING OVERLAY */
 #page-loader {
@@ -59,4 +57,3 @@
   50%     {background-size:20% 20%}
   90%,100%{background-size:100% 20%}
 }
->>>>>>> main

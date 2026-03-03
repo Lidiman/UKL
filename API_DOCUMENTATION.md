@@ -481,3 +481,102 @@ Ini akan membuat table `tasks` dengan struktur yang sesuai.
 - CSRF protection aktif untuk semua POST, PUT, DELETE requests
 - User authentication diperlukan untuk semua endpoints
 - Data secara otomatis di-scope ke user yang login
+
+---
+
+## Notification API (Tugas Frontend)
+
+Base URL: `/api/notifications`
+
+### Endpoint yang perlu diimplementasikan di Frontend:
+
+#### 1. Get All Notifications
+**GET** `/api/notifications`
+
+**Headers:**
+```
+X-CSRF-TOKEN: {csrf_token}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "type": "deadline_reminder",
+            "title": "Deadline Reminder",
+            "message": "Task 'Finish Project' is due tomorrow!",
+            "is_read": false,
+            "created_at": "2026-03-01T10:00:00",
+            "updated_at": "2026-03-01T10:00:00"
+        }
+    ],
+    "total": 1,
+    "message": "Notifications retrieved successfully"
+}
+```
+
+#### 2. Get Single Notification
+**GET** `/api/notifications/{id}`
+
+**Headers:**
+```
+X-CSRF-TOKEN: {csrf_token}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "user_id": 1,
+        "type": "deadline_reminder",
+        "title": "Deadline Reminder",
+        "message": "Task 'Finish Project' is due tomorrow!",
+        "is_read": false,
+        "created_at": "2026-03-01T10:00:00",
+        "updated_at": "2026-03-01T10:00:00"
+    },
+    "message": "Notification retrieved successfully"
+}
+```
+
+#### 3. Delete Notification
+**DELETE** `/api/notifications/{id}`
+
+**Headers:**
+```
+X-CSRF-TOKEN: {csrf_token}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Notification deleted successfully"
+}
+```
+
+### Struktur Data Notification
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | integer | Unique ID |
+| user_id | integer | Owner of notification |
+| type | string | Type: deadline_reminder, dll |
+| title | string | Judul notification |
+| message | string | Isi pesan notification |
+| is_read | boolean | Sudah dibaca atau belum |
+| created_at | datetime | Waktu dibuat |
+| updated_at | datetime | Waktu diperbarui |
+
+### Tugas Frontend:
+1. Tampilkan semua notification user dengan memanggil GET /api/notifications
+2. Tampilkan detail notification dengan memanggil GET /api/notifications/{id}
+3. Hapus notification dengan memanggil DELETE /api/notifications/{id}
+4. Tambahkan indikator untuk notification yang belum dibaca (is_read: false)
+5. Saat notification dibaca, bisa langsung hapus atau bisa ditambahkan fitur mark as read (hubungi backend jika perlu fitur ini)
