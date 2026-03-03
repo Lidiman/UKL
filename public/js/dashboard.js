@@ -101,13 +101,13 @@ async function updateStats() {
             document.querySelector('.stat-box-value-done').textContent = stats.completed;
             document.querySelector('.stat-box-value-total').textContent = stats.total;
             document.querySelector('.stat-value').textContent = stats.pending;
-            if (notifications.total > 0) {
-                document.querySelector('.notification-badge').textContent = notifications.total;
-                document.querySelector('.notification-badge').style.display = 'inline-block';
+            if (notifications.length > 0) {
+                document.querySelector('.notification-badge').textContent = notifications.length;
+                document.querySelector('.notification-badge').style.display = 'flex';
             } else {
-                document.querySelector('.notification-badge').style.display = 'none';
+               document.querySelector('.notification-badge').style.display = 'none';
             }
-            //document.querySelector('.notification-badge').textContent = notifications.total;
+            //document.querySelector('.notification-badge').textContent = notifications.length;
             console.log('Stats updated:', stats);
             console.log('Projects:', projects);
             console.log('Notifications:', notifications);
