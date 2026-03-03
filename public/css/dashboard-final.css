@@ -489,6 +489,45 @@ body {
     color: var(--text-tertiary);
 }
 
+/* See All Notifications Link */
+.see-all-notifications {
+    display: block;
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.see-all-notifications a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6366F1;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+}
+
+.see-all-notifications a:hover {
+    background: var(--primary-gradient);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.see-all-notifications a i {
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.see-all-notifications a:hover i {
+    transform: translateX(4px);
+}
+
 /* ================================================
    Main Content Grid
    ================================================ */

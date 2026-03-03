@@ -26,7 +26,7 @@ class DeadlineReminder extends Notification
         return [
             'task_id' => $this->task->id,
             'title' => 'Reminder Task ',
-            'message' => 'Task "' . $this->task->title . '" is approaching its deadline on ' . $this->task->due_date->format('Y-m-d H:i:s'),
+            'message' => 'Task "' . $this->task->title . '" is approaching its deadline',
             'deadline' => $this->task->deadline
         ];
     }

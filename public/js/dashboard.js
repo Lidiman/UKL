@@ -119,6 +119,77 @@ async function updateStats() {
     }
 }
 
+async function updateNotifications() {
+    const NotificationWrapper = document.getElementById('Notification-Wrapper');
+    const seeAllLink = NotificationWrapper.querySelector('.see-all-notifications');
+
+    // Helper function to format time as "X minutes ago" or "X hours ago"
+    const formatTimeAgo = (dateString) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) {
+            return 'Baru saja';
+        } else if (diffInSeconds < 3600) {
+            const minutes = Math.floor(diffInSeconds / 60);
+            return minutes + ' menit lalu';
+        } else if (diffInSeconds < 86400) {
+            const hours = Math.floor(diffInSeconds / 3600);
+            return hours + ' jam lalu';
+        } else if (diffInSeconds < 604800) {
+            const days = Math.floor(diffInSeconds / 86400);
+            return days + ' hari lalu';
+        } else {
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+    };
+
+    try {
+        const response = await fetch(API_NOTIFICATIONS_URL, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+            }
+        });
+        const result = await response.json();
+        if (result.success) {
+            const notifications = result.data;
+            
+            // Remove existing notification items but keep the see-all link
+            const existingItems = NotificationWrapper.querySelectorAll('.notification-item');
+            existingItems.forEach(item => item.remove());
+            
+            notifications.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.className = 'notification-item';
+                notificationItem.innerHTML = `
+                    <div class="notification-icon">
+                        <i class='bx bx-bell'></i>
+                    </div>
+                    <div class="notification-content">
+                        <p class="notification-title">${notification.data.message}</p>
+                        <span class="notification-time">${formatTimeAgo(notification.created_at)}</span>
+                    </div>
+                `;
+                // Insert before the see-all-notifications link
+                if (seeAllLink) {
+                    NotificationWrapper.insertBefore(notificationItem, seeAllLink);
+                } else {
+                    NotificationWrapper.appendChild(notificationItem);
+                }
+            });
+        } else {
+            console.error('Failed to fetch notifications:', result.message);
+        }
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+    }
+}
 
 // Call updateStats on page load
 document.addEventListener('DOMContentLoaded', updateStats);
+document.addEventListener('DOMContentLoaded', updateNotifications);
+
+// Optionally, you can set an interval to refresh stats and notifications every few minutes
+setInterval(updateStats, 5 * 60 * 1000); // Refresh every 5 minutes
+setInterval(updateNotifications, 5 * 60 * 1000); // Refresh every 5 minutes

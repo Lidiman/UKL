@@ -124,7 +124,7 @@
                                     <i class='bx bx-x'></i>
                                 </button>
                             </div>
-                            <div class="notifications-list">
+<div class="notifications-list" id="Notification-Wrapper">
                                 <div class="notification-item">
                                     <div class="notification-icon">
                                         <i class='bx bx-task'></i>
@@ -134,23 +134,8 @@
                                         <span class="notification-time">5 menit lalu</span>
                                     </div>
                                 </div>
-                                <div class="notification-item">
-                                    <div class="notification-icon">
-                                        <i class='bx bx-folder'></i>
-                                    </div>
-                                    <div class="notification-content">
-                                        <p class="notification-title">Project: Q2 Planning dimulai</p>
-                                        <span class="notification-time">1 jam lalu</span>
-                                    </div>
-                                </div>
-                                <div class="notification-item">
-                                    <div class="notification-icon">
-                                        <i class='bx bx-check-circle'></i>
-                                    </div>
-                                    <div class="notification-content">
-                                        <p class="notification-title">Deadline: Website Revamp</p>
-                                        <span class="notification-time">2 jam lalu</span>
-                                    </div>
+                                <div class="see-all-notifications">
+                                    <a href="#">Lihat Semua Notifikasi <i class='bx bx-right-arrow-alt'></i></a>
                                 </div>
                             </div>
                         </div>
