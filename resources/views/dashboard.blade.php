@@ -210,15 +210,15 @@
                 <div class="overview-content">
                     <div class="overview-stat">
                         <span class="overview-label">Urgent</span>
-                        <p class="overview-value">3</p>
+                        <p class="overview-value-urgent">3</p>
                     </div>
                     <div class="overview-stat">
                         <span class="overview-label">In Progress</span>
-                        <p class="overview-value">5</p>
+                        <p class="overview-value-pending">5</p>
                     </div>
                     <div class="overview-stat">
                         <span class="overview-label">Completed</span>
-                        <p class="overview-value">18</p>
+                        <p class="overview-value-completed">18</p>
                     </div>
                 </div>
 
