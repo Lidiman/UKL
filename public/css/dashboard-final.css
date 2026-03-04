@@ -65,6 +65,29 @@ body {
     display: flex;
     flex-direction: column;
     box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 16px;
+    height: calc(100vh - 32px);
+    align-self: start;
+    overflow-y: auto;
+    width: 260px;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.5);
 }
 
 .sidebar-logo {
@@ -74,6 +97,7 @@ body {
     margin-bottom: 2rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 .logo-icon {
@@ -82,6 +106,9 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    line-height: 1;
+    display: flex;
+    align-items: center;
 }
 
 .logo-text {
@@ -92,6 +119,8 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
 .sidebar-menu {
@@ -99,6 +128,8 @@ body {
     flex-direction: column;
     gap: 0.5rem;
     flex: 1;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .menu-item {
@@ -112,6 +143,9 @@ body {
     transition: var(--transition);
     font-size: 0.95rem;
     font-weight: 500;
+    position: relative;
+    line-height: 1.2;
+    min-height: 44px;
 }
 
 .menu-item:hover {
@@ -125,16 +159,28 @@ body {
     background: rgba(99, 102, 241, 0.2);
     border-left: 3px solid #6366F1;
     padding-left: calc(1rem - 3px);
+    font-weight: 600;
+}
+
+.menu-item.active i {
+    color: #6366F1;
 }
 
 .menu-item i {
     font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .sidebar-footer {
     border-top: 1px solid var(--border-color);
     padding-top: 1rem;
     margin-top: auto;
+    flex-shrink: 0;
 }
 
 .logout-btn {
@@ -151,15 +197,25 @@ body {
     transition: var(--transition);
     font-size: 0.95rem;
     font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.2;
+    min-height: 44px;
 }
 
 .logout-btn:hover {
     background-color: rgba(239, 68, 68, 0.2);
     color: #FEE2E2;
+    transform: translateX(2px);
 }
 
 .logout-btn i {
     font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 /* div2: Top Navbar */
@@ -174,6 +230,9 @@ body {
     box-shadow: var(--shadow-md);
     display: flex;
     align-items: center;
+    position: sticky;
+    top: 16px;
+    z-index: 10;
 }
 
 .navbar-content {
