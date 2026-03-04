@@ -674,7 +674,7 @@ body {
     letter-spacing: 0.5px;
 }
 
-.overview-value {
+.overview-value-urgent, .overview-value-pending, .overview-value-completed {
     font-size: 1.75rem;
     font-weight: 700;
     color: var(--text-primary);

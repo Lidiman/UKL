@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const notificationsMenu = document.getElementById('notificationsMenu');
     const closeNotifications = document.getElementById('closeNotifications');
     const StatBoxValueDone = document.querySelector('.stat-box-value-done');
+    const OverviewUrgent = document.querySelector('.overview-value-urgent');
+    const OverviewPending = document.querySelector('.overview-value-pending');
+    const OverviewCompleted = document.querySelector('.overview-value-completed');
 
     if (profileBtn && profileMenu) {
         profileBtn.addEventListener('click', function(e) {
@@ -101,6 +104,9 @@ async function updateStats() {
             document.querySelector('.stat-box-value-done').textContent = stats.completed;
             document.querySelector('.stat-box-value-total').textContent = stats.total;
             document.querySelector('.stat-value').textContent = stats.pending;
+            document.querySelector('.overview-value-urgent').textContent = stats.urgent_task;
+            document.querySelector('.overview-value-pending').textContent = stats.pending;
+            document.querySelector('.overview-value-completed').textContent = stats.completed;
             if (notifications.length > 0) {
                 document.querySelector('.notification-badge').textContent = notifications.length;
                 document.querySelector('.notification-badge').style.display = 'flex';
