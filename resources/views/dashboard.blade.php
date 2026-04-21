@@ -40,7 +40,7 @@
         <!-- sambutan -->
         <div class="welcome-header">
             <h1>Selamat Datang, {{ Auth::user()->name }}!</h1>
-            <p>Ringkasan aktivitas kamu ada di sini</p>
+            <p>Ringkasan aktivitas kamu ada di sini!</p>
         </div>
 
         <!-- kartu profil -->
