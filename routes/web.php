@@ -24,6 +24,10 @@ Route::get('/task-manager', function () {
     return view('task-manager');
 })->middleware('auth');
 
+Route::get('/focus', function () {
+    return view('focus');
+})->middleware('auth');
+
 // Admin Routes
 Route::get('/admin', function () {
     return view('admin.dashboard');

@@ -39,6 +39,10 @@
                     <i class='bx bx-task'></i>
                     <span>Tasks</span>
                 </a>
+                <a href="/focus" class="menu-item">
+                    <i class='bx bx-target-lock'></i>
+                    <span>Focus</span>
+                </a>
                 <a href="/analytics" class="menu-item">
                     <i class='bx bx-bar-chart-alt-2'></i>
                     <span>Analytics</span>
