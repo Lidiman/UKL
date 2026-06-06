@@ -99,6 +99,22 @@
                             <span class="profile-name">{{ Auth::user()->name }}</span>
                             <i class='bx bx-chevron-down'></i>
                         </button>
+
+                        <!-- Dropdown Menu -->
+                        <div class="dropdown-menu" id="profileMenu">
+                            <a href="/profile" class="dropdown-item">
+                                <i class='bx bx-user'></i>
+                                <span>Profile</span>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <form method="POST" action="{{ route('logout') }}" style="width: 100%;">
+                                @csrf
+                                <button type="submit" class="dropdown-item dropdown-item-logout">
+                                    <i class='bx bx-log-out'></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
