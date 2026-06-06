@@ -102,13 +102,9 @@
                         
                         <!-- Profile Dropdown Menu -->
                         <div class="dropdown-menu" id="profileMenu">
-                            <a href="#profile" class="dropdown-item">
+                            <a href="/profile" class="dropdown-item">
                                 <i class='bx bx-user'></i>
                                 <span>Profile</span>
-                            </a>
-                            <a href="/settings" class="dropdown-item">
-                                <i class='bx bx-cog'></i>
-                                <span>Settings</span>
                             </a>
                             <hr class="dropdown-divider">
                             <form method="POST" action="{{ route('logout') }}" style="width: 100%;">

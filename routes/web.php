@@ -28,6 +28,10 @@ Route::get('/focus', function () {
     return view('focus');
 })->middleware('auth');
 
+Route::get('/profile', function () {
+    return view('profile');
+})->middleware('auth');
+
 // Admin Routes
 Route::get('/admin', function () {
     return view('admin.dashboard');
