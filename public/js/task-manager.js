@@ -69,6 +69,9 @@ function openEditModal(task) {
     document.getElementById('editTaskPriority').value = task.priority;
     document.getElementById('editTaskDueDate').value = task.due_date;
     document.getElementById('editTaskStatus').value = task.status;
+    if (document.getElementById('editTaskProject')) {
+        document.getElementById('editTaskProject').value = task.project_id || '';
+    }
     
     editTaskModal.classList.add('active');
 }
@@ -113,6 +116,7 @@ taskForm.addEventListener('submit', async (e) => {
         category: document.getElementById('taskCategory').value,
         priority: document.getElementById('taskPriority').value,
         due_date: document.getElementById('taskDueDate').value,
+        project_id: document.getElementById('taskProject') ? (document.getElementById('taskProject').value || null) : null,
     };
     
     if (!validateFormData(formData)) {
@@ -392,6 +396,7 @@ editTaskForm.addEventListener('submit', async (e) => {
         priority: document.getElementById('editTaskPriority').value,
         due_date: document.getElementById('editTaskDueDate').value,
         status: document.getElementById('editTaskStatus').value,
+        project_id: document.getElementById('editTaskProject') ? (document.getElementById('editTaskProject').value || null) : null,
     };
     
     if (!formData.title || !formData.category || !formData.priority || !formData.due_date || !formData.status) {
@@ -528,16 +533,19 @@ async function updateStats() {
 
         if (result.success) {
             const stats = result.data;
-            document.querySelectorAll('.stat-box')[0].querySelector('.stat-number').textContent = stats.total;
-            document.querySelectorAll('.stat-box')[1].querySelector('.stat-number').textContent = stats.completed;
-            document.querySelectorAll('.stat-box')[2].querySelector('.stat-number').textContent = stats.pending;
+            const statBoxes = document.querySelectorAll('.stat-box');
+            if (statBoxes.length >= 3) {
+                statBoxes[0].querySelector('.stat-number').textContent = stats.total;
+                statBoxes[1].querySelector('.stat-number').textContent = stats.completed;
+                statBoxes[2].querySelector('.stat-number').textContent = stats.pending;
+            }
             
             // Update progress
             const progressFill = document.querySelector('.progress-fill');
             const progressPercentage = document.querySelector('.progress-percentage');
             
-            progressFill.style.width = stats.percentage + '%';
-            progressPercentage.textContent = stats.percentage + '%';
+            if (progressFill) progressFill.style.width = stats.percentage + '%';
+            if (progressPercentage) progressPercentage.textContent = stats.percentage + '%';
         }
     } catch (error) {
         console.error('Error updating stats:', error);
@@ -650,6 +658,7 @@ document.head.appendChild(style);
 // ==================== Initialize ====================
 document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
+    loadProjectsForDropdowns();
 
     // Profile dropdown
     const profileBtn = document.getElementById('profileBtn');
@@ -669,3 +678,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('✨ Task Manager Backend Ready!');
 });
+
+async function loadProjectsForDropdowns() {
+    try {
+        const response = await fetch('/api/projects', {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+            }
+        });
+        const result = await response.json();
+        if (result.success) {
+            const projects = result.data;
+            const taskProjectSelect = document.getElementById('taskProject');
+            const editTaskProjectSelect = document.getElementById('editTaskProject');
+            
+            if (taskProjectSelect && editTaskProjectSelect) {
+                taskProjectSelect.innerHTML = '<option value="">-- Tanpa Project --</option>';
+                editTaskProjectSelect.innerHTML = '<option value="">-- Tanpa Project --</option>';
+                
+                projects.forEach(p => {
+                    const opt1 = document.createElement('option');
+                    opt1.value = p.id;
+                    opt1.textContent = p.name;
+                    taskProjectSelect.appendChild(opt1);
+                    
+                    const opt2 = document.createElement('option');
+                    opt2.value = p.id;
+                    opt2.textContent = p.name;
+                    editTaskProjectSelect.appendChild(opt2);
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error loading projects for dropdowns:', error);
+    }
+}

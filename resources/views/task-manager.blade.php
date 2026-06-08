@@ -227,6 +227,13 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label>Project <span style="color:var(--text-tertiary);font-weight:400">(Opsional)</span></label>
+                    <select id="taskProject">
+                        <option value="">-- Tanpa Project --</option>
+                    </select>
+                </div>
+
                 <div class="form-actions">
                     <button type="button" class="modal-close-btn btn btn-secondary">Batal</button>
                     <button type="submit" class="btn btn-primary">
@@ -287,6 +294,13 @@
                     <select id="editTaskStatus" required>
                         <option value="pending">Pending</option>
                         <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Project <span style="color:var(--text-tertiary);font-weight:400">(Opsional)</span></label>
+                    <select id="editTaskProject">
+                        <option value="">-- Tanpa Project --</option>
                     </select>
                 </div>
 
