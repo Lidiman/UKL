@@ -64,4 +64,11 @@ class User extends Authenticatable
         return $this->hasMany(Project::class);
     }
 
+    /**
+     * Get the focus sessions for the user.
+     */
+    public function focusSessions()
+    {
+        return $this->hasMany(FocusSession::class);
+    }
 }

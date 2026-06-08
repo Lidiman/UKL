@@ -27,7 +27,16 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);
+        Route::post('/generate-deadline-reminders', [NotificationController::class, 'generateDeadlineNotifications']);
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllRead']);
+        Route::put('/{id}/mark-read', [NotificationController::class, 'markRead']);
         Route::delete('/{notification}', [NotificationController::class, 'destroy']);
+    });
+
+    // Focus Sessions
+    Route::prefix('focus-sessions')->group(function () {
+        Route::get('/', [App\Http\Controllers\FocusSessionController::class, 'index']);
+        Route::post('/', [App\Http\Controllers\FocusSessionController::class, 'store']);
     });
 
     Route::get('/user', function (Request $request) {

@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // CSRF token for API requests
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     // Get User ID for scoping local storage
     const userIdMeta = document.querySelector('meta[name="user-id"]');
     const userId = userIdMeta ? userIdMeta.getAttribute('content') : 'guest';
@@ -280,61 +282,58 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function updateStatsDisplay() {
-        if(dailyFocusHoursDisplay) {
-            let currentTotalSeconds = totalFocusMinutes * 60;
-            
-            // Add realtime ticking seconds if currently focusing
-            if (isRunning && currentMode === 'focus') {
-                const elapsedSeconds = TIMES.focus - timeLeft;
-                currentTotalSeconds += elapsedSeconds;
-            }
-            
-            const totalHours = Math.floor(currentTotalSeconds / 3600);
-            const totalMins = Math.floor((currentTotalSeconds % 3600) / 60);
-            
-            if (totalHours > 0) {
-                dailyFocusHoursDisplay.textContent = `${totalHours}h ${totalMins}m`;
-            } else {
-                dailyFocusHoursDisplay.textContent = `${totalMins}m`;
-            }
+    // This function now relies on server-provided total minutes; UI updates are handled after loading sessions.
+    // No local aggregation needed here.
+    if (rightSidebarActiveTask && rightSidebarActiveTaskName) {
+        let taskName = activeTaskTitle.textContent !== 'My Task' ? activeTaskTitle.textContent : "Focus Session";
+        if (taskName === "Focus Session" && taskInput.value.trim() !== '') {
+            taskName = taskInput.value.trim();
         }
-        
-        if (rightSidebarActiveTask && rightSidebarActiveTaskName) {
-            let taskName = activeTaskTitle.textContent !== 'My Task' ? activeTaskTitle.textContent : "Focus Session";
-            if (taskName === "Focus Session" && taskInput.value.trim() !== '') {
-                taskName = taskInput.value.trim();
-            }
-            
-            if (isRunning && currentMode === 'focus') {
-                rightSidebarActiveTaskName.textContent = taskName;
-                rightSidebarActiveTask.style.display = 'flex';
-            } else {
-                rightSidebarActiveTask.style.display = 'none';
-            }
+        if (isRunning && currentMode === 'focus') {
+            rightSidebarActiveTaskName.textContent = taskName;
+            rightSidebarActiveTask.style.display = 'flex';
+        } else {
+            rightSidebarActiveTask.style.display = 'none';
         }
     }
+}
     
     function addHistoryItem(title, duration) {
-        const historyList = document.getElementById('sessionHistoryList');
-        if(!historyList) return;
-        
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        
-        const historyItemData = {
-            title: title,
-            duration: duration,
-            timeStr: timeStr
-        };
+    const historyList = document.getElementById('sessionHistoryList');
+    if(!historyList) return;
 
-        // Save to local storage
-        let historyData = JSON.parse(localStorage.getItem(KEYS.history)) || [];
-        historyData.unshift(historyItemData); // Add to beginning
-        if (historyData.length > 4) historyData.pop(); // Keep only 4
-        localStorage.setItem(KEYS.history, JSON.stringify(historyData));
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-        renderHistoryItem(historyItemData);
-    }
+    const historyItemData = {
+        title: title,
+        duration: duration,
+        timeStr: timeStr
+    };
+
+    // Persist to server
+    fetch('/api/focus-sessions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+            task_name: title,
+            duration: duration
+        })
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (!result.success) {
+            console.error('Failed to save focus session');
+        }
+    })
+    .catch(err => console.error('Error saving focus session', err));
+
+    // Also keep local fallback for immediate UI update
+    renderHistoryItem(historyItemData);
+}
 
     function renderHistoryItem(data) {
         const historyList = document.getElementById('sessionHistoryList');
@@ -367,17 +366,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadHistory() {
-        const historyList = document.getElementById('sessionHistoryList');
-        if(!historyList) return;
+    const historyList = document.getElementById('sessionHistoryList');
+    if(!historyList) return;
 
-        let historyData = JSON.parse(localStorage.getItem(KEYS.history)) || [];
-        
-        if (historyData.length > 0) {
-            historyList.innerHTML = ''; // clear the 'No sessions yet'
-            // Need to render in reverse order because renderHistoryItem uses prepend
-            [...historyData].reverse().forEach(data => renderHistoryItem(data));
+    // Fetch recent sessions from server
+    fetch('/api/focus-sessions', {
+        headers: { 'X-CSRF-TOKEN': csrfToken }
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            const sessions = result.data.sessions || [];
+            const totalMinutes = result.data.total_minutes || 0;
+            // Update total focus display
+            if (dailyFocusHoursDisplay) {
+                const hrs = Math.floor(totalMinutes / 60);
+                const mins = totalMinutes % 60;
+                dailyFocusHoursDisplay.textContent = hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+            }
+            // Render sessions (limit to 4 as UI expects)
+            historyList.innerHTML = '';
+            sessions.slice(0, 4).reverse().forEach(s => {
+                const data = {
+                    title: s.task_name,
+                    duration: s.duration,
+                    timeStr: new Date(s.completed_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                };
+                renderHistoryItem(data);
+            });
+        } else {
+            console.error('Failed to load focus sessions');
         }
-    }
+    })
+    .catch(err => console.error('Error loading focus sessions', err));
+}
     
     // --- Task UI Logic ---
     function setActiveTask(taskName) {

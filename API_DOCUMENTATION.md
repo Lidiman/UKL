@@ -368,7 +368,32 @@ Mendapatkan semua notifikasi yang ditujukan kepada pengguna aktif.
   }
   ```
 
-#### 2. Delete Notification
+#### 2. Generate Deadline Reminders
+Menghasilkan notifikasi pengingat untuk tugas-tugas yang mendekati tenggat waktu (dalam 24 jam ke depan).
+- **URL**: `/api/notifications/generate-deadline-reminders`
+- **Method**: `POST`
+- **Response (200 OK)**:
+  ```json
+  {
+      "success": true,
+      "message": "1 deadline reminder(s) generated.",
+      "notifications_sent": 1
+  }
+  ```
+
+#### 3. Mark All Notifications as Read
+Menandai semua notifikasi pengguna sebagai telah dibaca.
+- **URL**: `/api/notifications/mark-all-read`
+- **Method**: `POST`
+- **Response (200 OK)**:
+  ```json
+  {
+      "success": true,
+      "message": "All notifications marked as read."
+  }
+  ```
+
+#### 4. Delete Notification
 Menghapus atau membuang notifikasi dari daftar pengguna.
 - **URL**: `/api/notifications/{notification_id}`
 - **Method**: `DELETE`

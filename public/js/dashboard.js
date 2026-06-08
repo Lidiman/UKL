@@ -70,7 +70,20 @@ const API_STATS_URL = '/api/tasks/stats';
 const API_PROJECT_URL = '/api/projects';
 const API_NOTIFICATIONS_URL = '/api/notifications';
 
-const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+    // CSRF token for API requests
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    // Inject CSS for hover mark-as-read button
+    if (!document.getElementById('mark-read-styles')) {
+        const style = document.createElement('style');
+        style.id = 'mark-read-styles';
+        style.textContent = `
+            .mark-read-btn {font-size: 0.75rem; color: #6366F1; cursor: pointer; margin-left: 8px; opacity: 0; transition: opacity 0.2s; text-decoration: underline;}
+            .notification-item:hover .mark-read-btn, .alert-item:hover .mark-read-btn {opacity: 1;}
+        `;
+        document.head.appendChild(style);
+    }
+
 
 async function updateStats() {
     try {
@@ -107,13 +120,30 @@ async function updateStats() {
             document.querySelector('.overview-value-urgent').textContent = stats.urgent_task;
             document.querySelector('.overview-value-pending').textContent = stats.pending;
             document.querySelector('.overview-value-completed').textContent = stats.completed;
+
+            // ===== Update Task Overview Chart Bars =====
+            const barUrgent    = document.getElementById('chart-bar-urgent');
+            const barInProg    = document.getElementById('chart-bar-inprogress');
+            const barCompleted = document.getElementById('chart-bar-completed');
+
+            const urgent    = stats.urgent_task || 0;
+            const inProg    = stats.pending     || 0;
+            const completed = stats.completed   || 0;
+            const maxVal    = Math.max(urgent, inProg, completed, 1);
+
+            const toHeight = (val) => Math.max((val / maxVal) * 100, val > 0 ? 10 : 5) + '%';
+
+            if (barUrgent)    { barUrgent.style.height    = toHeight(urgent);    barUrgent.title    = 'Urgent: '      + urgent; }
+            if (barInProg)    { barInProg.style.height    = toHeight(inProg);    barInProg.title    = 'In Progress: ' + inProg; }
+            if (barCompleted) { barCompleted.style.height = toHeight(completed); barCompleted.title = 'Completed: '   + completed; }
+            // ============================================
+
             if (notifications.length > 0) {
                 document.querySelector('.notification-badge').textContent = notifications.length;
                 document.querySelector('.notification-badge').style.display = 'flex';
             } else {
                document.querySelector('.notification-badge').style.display = 'none';
             }
-            //document.querySelector('.notification-badge').textContent = notifications.length;
             console.log('Stats updated:', stats);
             console.log('Projects:', projects);
             console.log('Notifications:', notifications);
@@ -122,6 +152,66 @@ async function updateStats() {
         }
     } catch (error) {
         console.error('Error fetching stats:', error);
+    }
+}
+
+// ==================== CSS Injection for Mark Read ====================
+if (!document.getElementById('mark-read-styles')) {
+    const style = document.createElement('style');
+    style.id = 'mark-read-styles';
+    style.textContent = `
+        .mark-read-btn {
+            font-size: 0.75rem;
+            color: #6366F1;
+            cursor: pointer;
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            text-decoration: underline;
+        }
+        .alert-item:hover .mark-read-btn,
+        .notification-item:hover .mark-read-btn {
+            opacity: 1;
+        }
+        .notification-content, .alert-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .notification-title, .alert-message {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// ==================== Mark As Read ====================
+async function markAsRead(id, event) {
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+    try {
+        const response = await fetch(`/api/notifications/${id}/mark-read`, {
+            method: 'PUT',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
+        });
+        const result = await response.json();
+        if (result.success) {
+            // Find the containing notification or alert item and remove it after marking as read
+            const container = event.target.closest('.notification-item') || event.target.closest('.alert-item');
+            if (container) {
+                container.remove();
+            }
+            // Refresh counts and badge
+            updateStats();
+            updateNotifications();
+            updateRecentAlerts();
+        }
+    } catch (error) {
+        console.error('Failed to mark notification as read:', error);
     }
 }
 
@@ -165,15 +255,30 @@ async function updateNotifications() {
             const existingItems = NotificationWrapper.querySelectorAll('.notification-item');
             existingItems.forEach(item => item.remove());
             
-            notifications.forEach(notification => {
-                const notificationItem = document.createElement('div');
+                        // Update badge count based on unread notifications
+            const unreadCount = notifications.filter(n => !n.read_at).length;
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+                notifications.forEach(notification => {
+    const notificationItem = document.createElement('div');
                 notificationItem.className = 'notification-item';
                 notificationItem.innerHTML = `
                     <div class="notification-icon">
                         <i class='bx bx-bell'></i>
                     </div>
                     <div class="notification-content">
-                        <p class="notification-title">${notification.data.message}</p>
+                        <p class="notification-title">
+                            ${notification.data.message}
+                            ${!notification.read_at ? `<span style="width:8px;height:8px;border-radius:50%;background:#6366F1;display:inline-block;margin-left:6px;"></span> <span class="mark-read-btn" onclick="markAsRead('${notification.id}', event)">Mark as read</span>` : ''}
+                        </p>
                         <span class="notification-time">${formatTimeAgo(notification.created_at)}</span>
                     </div>
                 `;
@@ -192,10 +297,100 @@ async function updateNotifications() {
     }
 }
 
-// Call updateStats on page load
-document.addEventListener('DOMContentLoaded', updateStats);
-document.addEventListener('DOMContentLoaded', updateNotifications);
+// ==================== Generate Deadline Reminders ====================
+async function generateDeadlineReminders() {
+    try {
+        await fetch('/api/notifications/generate-deadline-reminders', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrfToken },
+        });
+    } catch (e) {
+        console.warn('Could not generate deadline reminders:', e);
+    }
+}
 
-// Optionally, you can set an interval to refresh stats and notifications every few minutes
-setInterval(updateStats, 5 * 60 * 1000); // Refresh every 5 minutes
-setInterval(updateNotifications, 5 * 60 * 1000); // Refresh every 5 minutes
+// ==================== Recent Alerts Section ====================
+async function updateRecentAlerts() {
+    const alertsList = document.querySelector('.alerts-list');
+    if (!alertsList) return;
+
+    const formatTimeAgo = (dateString) => {
+        const date = new Date(dateString);
+        const now  = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        if (diffInSeconds < 60)   return 'Baru saja';
+        if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + ' menit lalu';
+        if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + ' jam lalu';
+        return Math.floor(diffInSeconds / 86400) + ' hari lalu';
+    };
+
+    const priorityClass = (priority) => {
+        if (priority === 'high')   return 'priority-high';
+        if (priority === 'medium') return 'priority-medium';
+        return 'priority-low';
+    };
+
+    const iconFor = (notifData) => {
+        if (!notifData) return 'bx-bell';
+        if (notifData.type === 'deadline_reminder') return 'bx-error-circle';
+        return 'bx-bell';
+    };
+
+    try {
+        const response = await fetch('/api/notifications', {
+            headers: { 'X-CSRF-TOKEN': csrfToken },
+        });
+        const result = await response.json();
+        if (!result.success) return;
+
+        const notifications = result.data.slice(0, 5); // show max 5 recent alerts
+
+        alertsList.innerHTML = '';
+
+        if (notifications.length === 0) {
+            alertsList.innerHTML = '<p style="color:var(--text-secondary);text-align:center;padding:1rem;">Tidak ada notifikasi</p>';
+            return;
+        }
+
+        notifications.forEach(n => {
+            const data     = n.data || {};
+            const pClass   = priorityClass(data.priority);
+            const icon     = iconFor(data);
+            const message  = data.message || 'Notifikasi baru';
+            const timeAgo  = formatTimeAgo(n.created_at);
+            const unreadDot = !n.read_at ? '<span style="width:8px;height:8px;border-radius:50%;background:#6366F1;display:inline-block;margin-left:6px;vertical-align:middle;"></span>' : '';
+
+            const item = document.createElement('div');
+            item.className = `alert-item ${pClass}`;
+            item.dataset.id = n.id;
+            item.innerHTML = `
+                <div class="alert-icon">
+                    <i class='bx ${icon}'></i>
+                </div>
+                <div class="alert-content">
+                    <p class="alert-message">
+                        ${message}
+                        ${!n.read_at ? `<span style="width:8px;height:8px;border-radius:50%;background:#6366F1;display:inline-block;margin-left:6px;"></span> <span class="mark-read-btn" onclick="markAsRead('${n.id}', event)">Mark as read</span>` : ''}
+                    </p>
+                    <span class="alert-time">${timeAgo}</span>
+                </div>
+            `;
+            alertsList.appendChild(item);
+        });
+    } catch (e) {
+        console.error('Failed to load recent alerts:', e);
+    }
+}
+
+// Call updateStats on page load
+document.addEventListener('DOMContentLoaded', async () => {
+    await generateDeadlineReminders(); // check & create deadline notifications first
+    updateStats();
+    updateNotifications();
+    updateRecentAlerts();
+});
+
+// Refresh every 5 minutes
+setInterval(updateStats, 5 * 60 * 1000);
+setInterval(updateNotifications, 5 * 60 * 1000);
+setInterval(updateRecentAlerts, 5 * 60 * 1000);

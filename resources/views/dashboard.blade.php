@@ -180,9 +180,9 @@
                 </div>
 
                 <div class="overview-chart">
-                    <div class="chart-bar" style="height: 60%"></div>
-                    <div class="chart-bar" style="height: 40%"></div>
-                    <div class="chart-bar" style="height: 80%"></div>
+                    <div class="chart-bar" id="chart-bar-urgent" style="height: 5%"></div>
+                    <div class="chart-bar" id="chart-bar-inprogress" style="height: 5%"></div>
+                    <div class="chart-bar" id="chart-bar-completed" style="height: 5%"></div>
                 </div>
             </section>
 
@@ -192,46 +192,9 @@
                     <h2 class="card-title">Recent Alerts</h2>
                 </div>
                 
-                <div class="alerts-list">
-                    <div class="alert-item priority-high">
-                        <div class="alert-icon">
-                            <i class='bx bx-error-circle'></i>
-                        </div>
-                        <div class="alert-content">
-                            <p class="alert-message">Deadline approaching: API Integration</p>
-                            <span class="alert-time">2 jam lagi</span>
-                        </div>
-                    </div>
-
-                    <div class="alert-item priority-medium">
-                        <div class="alert-icon">
-                            <i class='bx bx-info-circle'></i>
-                        </div>
-                        <div class="alert-content">
-                            <p class="alert-message">Tinjauan: Frontend Testing</p>
-                            <span class="alert-time">3 jam lalu</span>
-                        </div>
-                    </div>
-
-                    <div class="alert-item priority-medium">
-                        <div class="alert-icon">
-                            <i class='bx bx-check-double'></i>
-                        </div>
-                        <div class="alert-content">
-                            <p class="alert-message">Tugas Selesai: Database Optimization</p>
-                            <span class="alert-time">1 jam lalu</span>
-                        </div>
-                    </div>
-
-                    <div class="alert-item priority-low">
-                        <div class="alert-icon">
-                            <i class='bx bx-comment'></i>
-                        </div>
-                        <div class="alert-content">
-                            <p class="alert-message">Komentar baru di Project Q2</p>
-                            <span class="alert-time">30 menit lalu</span>
-                        </div>
-                    </div>
+                <div class="alerts-list" id="recent-alerts-list">
+                    {{-- Populated dynamically via dashboard.js from /api/notifications --}}
+                    <p style="color:var(--text-secondary);text-align:center;padding:1rem;">Memuat notifikasi...</p>
                 </div>
             </section>
 
