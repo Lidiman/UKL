@@ -628,7 +628,7 @@ style.textContent = `
         gap: 0.25rem;
     }
     
-    .menu-item {
+    .task-menu-popup .menu-item {
         padding: 0.5rem 1rem;
         background: none;
         border: none;
@@ -640,7 +640,7 @@ style.textContent = `
         font-size: 0.9rem;
     }
     
-    .menu-item:hover {
+    .task-menu-popup .menu-item:hover {
         background: rgba(102, 126, 234, 0.1);
         color: var(--highlight-color);
     }

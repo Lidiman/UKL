@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Profile - ProductivityFlow</title>
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
@@ -13,28 +14,7 @@
 <div class="dashboard-layout">
 
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <div class="logo-icon"><i class='bx bx-bolt'></i></div>
-            <span class="logo-text">ProductivityFlow</span>
-        </div>
-        <nav class="sidebar-menu">
-            <a href="/dashboard" class="menu-item"><i class='bx bx-home'></i><span>Dashboard</span></a>
-            <a href="/projects" class="menu-item"><i class='bx bx-folder'></i><span>Projects</span></a>
-            <a href="/task-manager" class="menu-item"><i class='bx bx-task'></i><span>Tasks</span></a>
-            <a href="/focus" class="menu-item"><i class='bx bx-target-lock'></i><span>Focus</span></a>
-            <a href="/analytics" class="menu-item"><i class='bx bx-bar-chart-alt-2'></i><span>Analytics</span></a>
-            <a href="/settings" class="menu-item"><i class='bx bx-cog'></i><span>Settings</span></a>
-        </nav>
-        <div class="sidebar-footer">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class='bx bx-log-out'></i><span>Logout</span>
-                </button>
-            </form>
-        </div>
-    </aside>
+    @include('partials.sidebar')
 
     <!-- Navbar -->
     <header class="navbar-top">
