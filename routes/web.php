@@ -32,6 +32,10 @@ Route::get('/profile', function () {
     return view('profile');
 })->middleware('auth');
 
+Route::get('/analytics', function () {
+    return view('analytics');
+})->middleware('auth');
+
 // Admin Routes
 Route::get('/admin', function () {
     return view('admin.dashboard');
