@@ -24,6 +24,22 @@ Route::get('/task-manager', function () {
     return view('task-manager');
 })->middleware('auth');
 
+Route::get('/focus', function () {
+    return view('focus');
+})->middleware('auth');
+
+Route::get('/profile', function () {
+    return view('profile');
+})->middleware('auth');
+
+Route::get('/analytics', function () {
+    return view('analytics');
+})->middleware('auth');
+
+Route::get('/projects', function () {
+    return view('projects');
+})->middleware('auth');
+
 // Admin Routes
 Route::get('/admin', function () {
     return view('admin.dashboard');

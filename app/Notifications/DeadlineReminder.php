@@ -2,9 +2,6 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class DeadlineReminder extends Notification
@@ -24,10 +21,12 @@ class DeadlineReminder extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'task_id' => $this->task->id,
-            'title' => 'Reminder Task ',
-            'message' => 'Task "' . $this->task->title . '" is approaching its deadline',
-            'deadline' => $this->task->deadline
+            'task_id'  => $this->task->id,
+            'title'    => 'Deadline Approaching',
+            'message'  => 'Task "' . $this->task->title . '" is due tomorrow on ' . $this->task->due_date,
+            'due_date' => $this->task->due_date,
+            'priority' => $this->task->priority,
+            'type'     => 'deadline_reminder',
         ];
     }
 }

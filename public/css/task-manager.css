@@ -58,168 +58,7 @@ body {
    Main Sidebar (Left Navigation)
    ================================================ */
 
-.sidebar {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    padding: 2rem 1rem;
-    display: flex;
-    flex-direction: column;
-    box-shadow: var(--shadow-md);
-    position: sticky;
-    top: 16px;
-    height: calc(100vh - 32px);
-    align-self: start;
-    overflow-y: auto;
-    width: 260px;
-}
-
-.sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: rgba(99, 102, 241, 0.3);
-    border-radius: 10px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(99, 102, 241, 0.5);
-}
-
-.sidebar-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-    flex-shrink: 0;
-}
-
-.logo-icon {
-    font-size: 1.75rem;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-}
-
-.logo-text {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-.sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-}
-
-.menu-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.875rem 1rem;
-    border-radius: 10px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: var(--transition);
-    font-size: 0.95rem;
-    font-weight: 500;
-    position: relative;
-    line-height: 1.2;
-    min-height: 44px;
-}
-
-.menu-item:hover {
-    color: var(--text-primary);
-    background-color: rgba(99, 102, 241, 0.1);
-    transform: translateX(4px);
-}
-
-.menu-item.active {
-    color: var(--text-primary);
-    background: rgba(99, 102, 241, 0.2);
-    border-left: 3px solid #6366F1;
-    padding-left: calc(1rem - 3px);
-    font-weight: 600;
-}
-
-.menu-item.active i {
-    color: #6366F1;
-}
-
-.menu-item i {
-    font-size: 1.25rem;
-    width: 1.25rem;
-    height: 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.sidebar-footer {
-    border-top: 1px solid var(--border-color);
-    padding-top: 1rem;
-    margin-top: auto;
-    flex-shrink: 0;
-}
-
-.logout-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-    padding: 0.875rem 1rem;
-    border: none;
-    border-radius: 10px;
-    background-color: rgba(239, 68, 68, 0.1);
-    color: #FCA5A5;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 0.95rem;
-    font-weight: 500;
-    font-family: 'Inter', sans-serif;
-    line-height: 1.2;
-    min-height: 44px;
-}
-
-.logout-btn:hover {
-    background-color: rgba(239, 68, 68, 0.2);
-    color: #FEE2E2;
-    transform: translateX(2px);
-}
-
-.logout-btn i {
-    font-size: 1.25rem;
-    width: 1.25rem;
-    height: 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
+/* Main Sidebar (Left Navigation) - Moved to public/css/sidebar.css */
 
 /* ================================================
    Top Navbar
@@ -375,6 +214,15 @@ body {
     background-color: rgba(99, 102, 241, 0.1);
 }
 
+.profile-btn-nav i {
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.profile-btn-nav.active i {
+    transform: rotate(180deg);
+}
+
 .profile-avatar-small {
     width: 28px;
     height: 28px;
@@ -386,6 +234,66 @@ body {
 .profile-name {
     font-weight: 500;
     font-size: 0.85rem;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    min-width: 180px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: var(--transition);
+    z-index: 1000;
+}
+
+.dropdown-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition);
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+    color: var(--text-primary);
+}
+
+.dropdown-item i { font-size: 1.1rem; }
+
+.dropdown-item-logout:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #FCA5A5;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: var(--border-color);
+    border: none;
+    margin: 0.5rem 0;
 }
 
 /* ================================================
@@ -742,24 +650,123 @@ body {
     gap: 0.875rem;
     margin-bottom: 1rem;
     align-items: flex-start;
-}
-
-.task-checkbox {
-    flex-shrink: 0;
-    margin-top: 0.125rem;
-}
-
-.task-checkbox input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: #6366F1;
-    border-radius: 4px;
+    justify-content: space-between;
 }
 
 .task-title-section {
     flex: 1;
     min-width: 0;
+}
+
+/* Inline action buttons (Edit & Delete) */
+.task-actions-top {
+    display: flex;
+    gap: 0.4rem;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.task-card:hover .task-actions-top {
+    opacity: 1;
+}
+
+.task-action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.btn-edit-task:hover {
+    background: rgba(99, 102, 241, 0.2);
+    color: #818CF8;
+}
+
+.btn-delete-task:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #FCA5A5;
+}
+
+/* Task footer: Complete button + Status chip */
+.task-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--border-color);
+    gap: 0.75rem;
+}
+
+.btn-complete-task {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 1rem;
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    border-radius: 8px;
+    background: rgba(99, 102, 241, 0.08);
+    color: #A5B4FC;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: var(--transition);
+}
+
+.btn-complete-task:hover {
+    background: rgba(99, 102, 241, 0.18);
+    border-color: rgba(99, 102, 241, 0.6);
+    color: #C7D2FE;
+    transform: translateY(-1px);
+}
+
+.btn-complete-task.is-completed {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.35);
+    color: #86EFAC;
+}
+
+.btn-complete-task.is-completed:hover {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #FCA5A5;
+}
+
+.btn-complete-task i {
+    font-size: 1rem;
+}
+
+.task-status-chip {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.3rem 0.7rem;
+    border-radius: 100px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.chip-done {
+    background: rgba(34, 197, 94, 0.12);
+    color: #86EFAC;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.chip-pending {
+    background: rgba(251, 191, 36, 0.1);
+    color: #FCD34D;
+    border: 1px solid rgba(251, 191, 36, 0.25);
 }
 
 .task-title {

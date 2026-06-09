@@ -1,0 +1,521 @@
+/* ================================================
+   Focus Workspace - ProductivityFlow
+   ================================================ */
+
+/* CSS Variables specific to Focus */
+:root {
+    --focus-glass-bg: rgba(30, 41, 59, 0.6);
+    --focus-glass-border: rgba(255, 255, 255, 0.1);
+    --focus-red: #F43F5E;
+    --focus-green: #10B981;
+    --focus-blue: #3B82F6;
+    --timer-font: 'Inter', monospace;
+}
+
+/* Base Layout Modifications */
+.focus-main {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 1024px) {
+    .focus-main {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ================================================
+   Timer Section (Center)
+   ================================================ */
+.timer-section {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+/* Background Image & Blur */
+.timer-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/focus-bg.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+.timer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.8));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 2;
+}
+
+/* Glassmorphism Card for Timer */
+.timer-card {
+    position: relative;
+    z-index: 3;
+    background: var(--focus-glass-bg);
+    border: 1px solid var(--focus-glass-border);
+    border-radius: 20px;
+    padding: 3rem;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: var(--transition);
+}
+
+/* Mode Switcher (Focus, Short Break, Long Break) */
+.timer-modes {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem;
+    border-radius: 12px;
+}
+
+.mode-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mode-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.mode-btn.active {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.mode-btn[data-mode="shortBreak"].active {
+    background: linear-gradient(135deg, #10B981, #059669);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.mode-btn[data-mode="longBreak"].active {
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Timer Display */
+.timer-display {
+    font-size: 6rem;
+    font-weight: 800;
+    font-family: var(--timer-font);
+    color: white;
+    line-height: 1;
+    margin-bottom: 2rem;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    letter-spacing: -2px;
+}
+
+/* Timer Controls (Start/Pause) */
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.control-btn {
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    color: white;
+}
+
+.btn-start-pause {
+    width: 80px;
+    height: 80px;
+    background: white;
+    color: var(--bg-primary);
+    font-size: 2rem;
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.btn-start-pause:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.3);
+}
+
+.btn-reset, .btn-settings {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-reset:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(-45deg);
+}
+
+.btn-settings:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(45deg);
+}
+
+/* ================================================
+   Modal Styles
+   ================================================ */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-content.focus-settings-modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.modal-close:hover {
+    color: var(--focus-red);
+}
+
+.settings-group {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.settings-group label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.settings-group input {
+    width: 80px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.5rem;
+    color: white;
+    text-align: center;
+}
+
+.settings-group input:focus {
+    outline: none;
+    border-color: #6366F1;
+}
+
+/* ================================================
+   Task Input Section
+   ================================================ */
+.task-input-section {
+    position: relative;
+    z-index: 3;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.task-input-wrapper {
+    background: var(--focus-glass-bg);
+    border: 1px solid var(--focus-glass-border);
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(20px);
+}
+
+.task-input-wrapper i {
+    color: var(--text-tertiary);
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+}
+
+.focus-task-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    padding: 0.75rem 0;
+    outline: none;
+}
+
+.focus-task-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.active-task-display {
+    background: var(--primary-gradient);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.active-task-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.active-task-icon {
+    font-size: 1.25rem;
+}
+
+.clear-task-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.clear-task-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: rotate(90deg);
+}
+
+/* ================================================
+   Productivity Sidebar (Right)
+   ================================================ */
+.productivity-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.focus-stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition);
+}
+
+.focus-stat-card:hover {
+    border-color: #6366F1;
+    transform: translateY(-2px);
+}
+
+.stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.icon-blue { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+.icon-purple { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
+.icon-green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+
+.stat-details h4 {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.stat-details .stat-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.stat-details .stat-sub {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-top: 0.25rem;
+}
+
+/* Motivational Quote */
+.quote-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.quote-icon {
+    font-size: 2rem;
+    color: rgba(99, 102, 241, 0.3);
+    margin-bottom: 0.5rem;
+}
+
+.quote-text {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+
+.quote-author {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* History Preview */
+.history-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    flex: 1;
+}
+
+.history-card h3 {
+    font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.history-item-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.history-item-icon {
+    color: #6366F1;
+}
+
+.history-item-title {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.history-item-duration {
+    color: var(--text-secondary);
+    font-weight: 600;
+}

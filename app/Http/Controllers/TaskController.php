@@ -138,44 +138,48 @@ class TaskController extends Controller
 
     // Get task stats
     public function stats()
-{
-    $userId = auth()->id();
+    {
+        $userId = auth()->id();
 
-    $tasks = Task::where('user_id', $userId)->get();
-    $totalTasks = $tasks->count();
-    $UrgentTasks = $tasks->where('priority', 'high')->where('status', 'pending')->count();
+        $tasks = Task::where('user_id', $userId)->get();
+        $totalTasks = $tasks->count();
+        $urgentTasks = $tasks->where('priority', 'high')->where('status', 'pending')->count();
 
-    $work = $tasks->where('category', 'work')->count();
-    $personal = $tasks->where('category', 'personal')->count();
-    $learning = $tasks->where('category', 'learning')->count();
-    $health = $tasks->where('category', 'health')->count();
+        $work     = $tasks->where('category', 'work')->count();
+        $personal = $tasks->where('category', 'personal')->count();
+        $learning = $tasks->where('category', 'learning')->count();
+        $health   = $tasks->where('category', 'health')->count();
 
-    $completedTasks = $tasks->where('status', 'completed')->count();
-    $pendingTasks = $totalTasks - $completedTasks;
+        $completedTasks = $tasks->where('status', 'completed')->count();
+        $pendingTasks   = $totalTasks - $completedTasks;
 
-    $calculatePercent = function ($value) use ($totalTasks) {
-        return $totalTasks > 0 ? round(($value / $totalTasks) * 100, 2) : 0;
-    };
+        $calculatePercent = function ($value) use ($totalTasks) {
+            return $totalTasks > 0 ? round(($value / $totalTasks) * 100, 2) : 0;
+        };
 
-    return response()->json([
-        'success' => true,
-        'data' => [
-            'total' => $totalTasks,
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'total' => $totalTasks,
 
-            'work_total' => $work,
-            'personal_total' => $personal,
-            'learning_total' => $learning,
-            'health_total' => $health,
+                'work_total'     => $work,
+                'personal_total' => $personal,
+                'learning_total' => $learning,
+                'health_total'   => $health,
 
-            'completed' => $completedTasks,
-            'pending' => $pendingTasks,
+                'completed' => $completedTasks,
+                'pending'   => $pendingTasks,
 
-            'taskwork_percent' => $calculatePercent($work),
-            'taskpersonal_percent' => $calculatePercent($personal),
-            'tasklearning_percent' => $calculatePercent($learning),
-            'taskhealth_percent' => $calculatePercent($health),
-            'urgent_task' => $UrgentTasks,
-        ]
-    ]);
-}
+                // Fields for dashboard Task Overview graphic
+                'urgent_task'      => $urgentTasks,
+                'in_progress'      => $pendingTasks,
+                'completed_count'  => $completedTasks,
+
+                'taskwork_percent'     => $calculatePercent($work),
+                'taskpersonal_percent' => $calculatePercent($personal),
+                'tasklearning_percent' => $calculatePercent($learning),
+                'taskhealth_percent'   => $calculatePercent($health),
+            ]
+        ]);
+    }
 }

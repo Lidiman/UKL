@@ -1,385 +1,252 @@
-# Task Manager API Documentation
+# API Documentation - ProductivityFlow
 
-## Overview
-API endpoints untuk Task Manager yang sudah terintegrasi dengan database.
-
-## Base URL
-```
-/api/tasks
-```
-
-## Authentication
-Semua endpoint memerlukan CSRF token dalam header `X-CSRF-TOKEN` dan user yang sudah login (authenticate).
-
-## Endpoints
-
-### 1. Get All Tasks
-**GET** `/api/tasks`
-
-**Headers:**
-```
-X-CSRF-TOKEN: {csrf_token}
-```
-
-**Response:**
-```json
-{
-    "success": true,
-    "data": [
-        {
-            "id": 1,
-            "user_id": 1,
-            "project_id": 1,
-            "title": "Finish Project",
-            "description": "Complete the project proposal",
-            "category": "work",
-            "priority": "high",
-            "due_date": "2026-02-28",
-            "status": "pending",
-            "is_single_task": false,
-            "created_at": "2026-02-23T10:00:00",
-            "updated_at": "2026-02-23T10:00:00"
-        },
-        {
-            "id": 2,
-            "user_id": 1,
-            "project_id": null,
-            "title": "Personal Task",
-            "description": "Personal task description",
-            "category": "personal",
-            "priority": "low",
-            "due_date": "2026-03-01",
-            "status": "pending",
-            "is_single_task": true,
-            "created_at": "2026-02-23T10:00:00",
-            "updated_at": "2026-02-23T10:00:00"
-        }
-    ],
-    "message": "Tasks retrieved successfully"
-}
-```
+Welcome to the comprehensive API documentation for **ProductivityFlow**. This document outlines all available endpoints, required authentication headers, request payloads, and expected responses for both standard users and administrators.
 
 ---
 
-### 2. Create New Task
-**POST** `/api/tasks`
+## General Information
 
-**Headers:**
-```
-Content-Type: application/json
-X-CSRF-TOKEN: {csrf_token}
-```
-
-**Body:**
-```json
-{
-    "title": "Finish Project",
-    "description": "Complete the project proposal",
-    "category": "work",
-    "priority": "high",
-    "due_date": "2026-02-28",
-    "project_id": 1,
-    "is_single_task": false
-}
+### Base URL
+All API requests should be prefixed with the base URL of your application:
+```http
+http://your-domain.com/api
 ```
 
-> **⚠️ IMPORTANT - Project Assignment Requirements:**
-> - When adding a task to a project, you MUST set:
->   - `is_single_task` to `false`
->   - `project_id` must be a valid project ID that exists in the `projects` table
-> - If you don't set `project_id`, the task will be created as a single task (standalone task)
-> - The API will automatically set `is_single_task` to `false` if you provide a `project_id`
+### Authentication (Bearer Token)
+The API is secured using **Laravel Sanctum**. To access any protected endpoint, you must include a Bearer Token in the `Authorization` header of your HTTP request. 
 
-**Response:** (201 Created)
-```json
-{
-    "success": true,
-    "data": {
-        "id": 1,
-        "user_id": 1,
-        "project_id": 1,
-        "title": "Finish Project",
-        "description": "Complete the project proposal",
-        "category": "work",
-        "priority": "high",
-        "due_date": "2026-02-28",
-        "status": "pending",
-        "is_single_task": false,
-        "created_at": "2026-02-23T10:00:00",
-        "updated_at": "2026-02-23T10:00:00"
-    },
-    "message": "Task created successfully"
-}
+```http
+Authorization: Bearer {your_api_token_here}
+Accept: application/json
 ```
+
+> **Note for Web Clients (SPA):** If you are accessing the API from the official ProductivityFlow web dashboard on the same domain, session cookies are automatically used. You do not need to manually pass a Bearer token in the frontend code.
 
 ---
 
-### 3. Update Task
-**PUT** `/api/tasks/{id}`
+## 1. Authentication API
 
-**Headers:**
-```
-Content-Type: application/json
-X-CSRF-TOKEN: {csrf_token}
-```
+These endpoints are used to generate and revoke API tokens.
 
-**Body** (Send only fields you want to update):
-```json
-{
-    "title": "Updated Title",
-    "status": "completed",
-    "priority": "medium",
-    "project_id": 1,
-    "is_single_task": false
-}
-```
+### A. Login & Generate Token
+Authenticates a user and returns a plain-text API token.
+- **URL**: `/api/login`
+- **Method**: `POST`
+- **Headers**: `Accept: application/json`
+- **Request Body**:
+  ```json
+  {
+      "email": "user@example.com",
+      "password": "yourpassword",
+      "device_name": "mobile_app" 
+  }
+  ```
+  *(Note: `device_name` is optional but recommended for tracking active sessions)*
+- **Response (200 OK)**:
+  ```json
+  {
+      "success": true,
+      "data": {
+          "user": {
+              "id": 1,
+              "name": "Jane Doe",
+              "email": "jane@example.com"
+          },
+          "token": "1|GetZI1JRFOFWhmChW163dtJmniVTMdUIA2qC258Rcfea50e2",
+          "token_type": "Bearer"
+      },
+      "message": "Login berhasil"
+  }
+  ```
 
-> **⚠️ IMPORTANT - Project Assignment Requirements:**
-> - When assigning a task to a project, you MUST set:
->   - `is_single_task` to `false`
->   - `project_id` must be a valid project ID that exists in the `projects` table
-> - To remove a task from a project, set `project_id` to `null` and `is_single_task` to `true`
-> - The API will automatically set `is_single_task` to `false` if you provide a `project_id`
-
-**Response:**
-```json
-{
-    "success": true,
-    "data": {
-        "id": 1,
-        "user_id": 1,
-        "project_id": 1,
-        "title": "Updated Title",
-        "description": "Complete the project proposal",
-        "category": "work",
-        "priority": "medium",
-        "due_date": "2026-02-28",
-        "status": "completed",
-        "is_single_task": false,
-        "created_at": "2026-02-23T10:00:00",
-        "updated_at": "2026-02-23T11:00:00"
-    },
-    "message": "Task updated successfully"
-}
-```
-
----
-
-### 4. Delete Task
-**DELETE** `/api/tasks/{id}`
-
-**Headers:**
-```
-X-CSRF-TOKEN: {csrf_token}
-```
-
-**Response:**
-```json
-{
-    "success": true,
-    "message": "Task deleted successfully"
-}
-```
+### B. Logout & Revoke Token
+Revokes the currently used token.
+- **URL**: `/api/logout`
+- **Method**: `POST`
+- **Headers**: 
+  ```http
+  Authorization: Bearer {token}
+  Accept: application/json
+  ```
+- **Response (200 OK)**:
+  ```json
+  {
+      "success": true,
+      "message": "Logout berhasil, token telah dihapus"
+  }
+  ```
 
 ---
 
-### 5. Get Task Statistics
-**GET** `/api/tasks/stats`
+## 2. User API Endpoints
 
-**Headers:**
-```
-X-CSRF-TOKEN: {csrf_token}
-```
+The following endpoints require a valid Bearer Token. Data returned is automatically scoped to the authenticated user.
 
-**Response:**
+### A. User Profile
+Get the currently authenticated user's profile.
+- **URL**: `/api/user`
+- **Method**: `GET`
+- **Response (200 OK)**:
+  ```json
+  {
+      "success": true,
+      "data": {
+          "id": 1,
+          "name": "Jane Doe",
+          "email": "jane@example.com",
+          "is_admin": false,
+          "created_at": "2026-06-08T12:00:00.000000Z"
+      }
+  }
+  ```
+
+### B. Tasks API
+
+#### 1. Get All Tasks
+- **URL**: `/api/tasks`
+- **Method**: `GET`
+- **Response (200 OK)**:
+  Returns an array of all active tasks belonging to the user.
+
+#### 2. Create Task
+- **URL**: `/api/tasks`
+- **Method**: `POST`
+- **Headers**:
+  ```http
+  X-Idempotency-Key: [UUID] (Optional to prevent double submission)
+  ```
+- **Request Body**:
+  | Field | Type | Required | Notes |
+  | :--- | :--- | :--- | :--- |
+  | `title` | string | **Yes** | Max 255 chars |
+  | `category` | string | **Yes** | `work`, `personal`, `learning`, or `health` |
+  | `priority` | string | **Yes** | `low`, `medium`, or `high` |
+  | `due_date` | date | **Yes** | Format: YYYY-MM-DD |
+  | `project_id` | integer | No | Must be a valid project ID |
+
+#### 3. Update Task
+- **URL**: `/api/tasks/{task_id}`
+- **Method**: `PUT`
+- **Request Body (Partial updates allowed)**:
+  ```json
+  {
+      "status": "completed"
+  }
+  ```
+
+#### 4. Delete Task
+- **URL**: `/api/tasks/{task_id}`
+- **Method**: `DELETE`
+
+#### 5. Get Task Statistics
+- **URL**: `/api/tasks/stats`
+- **Method**: `GET`
+- **Response (200 OK)**:
+  Returns task metrics (completed count, pending count, percentage by category, urgent tasks) for analytics displays.
+
+### C. Projects API
+
+#### 1. Get All Projects
+- **URL**: `/api/projects`
+- **Method**: `GET`
+- **Response (200 OK)**:
+  Returns all projects and eager-loads the tasks associated with them.
+
+#### 2. Create Project
+- **URL**: `/api/projects`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+      "name": "Mobile App Development",
+      "description": "Building the React Native app",
+      "status": "active"
+  }
+  ```
+
+#### 3. Update Project
+- **URL**: `/api/projects/{project_id}`
+- **Method**: `PUT`
+
+#### 4. Delete Project
+- **URL**: `/api/projects/{project_id}`
+- **Method**: `DELETE`
+  *Note: Deleting a project will not delete its tasks; tasks will simply be unassigned (`project_id` becomes `null`).*
+
+### D. Focus Sessions API
+
+#### 1. Get Focus Sessions
+- **URL**: `/api/focus-sessions`
+- **Method**: `GET`
+
+#### 2. Log Focus Session
+- **URL**: `/api/focus-sessions`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+      "task_name": "Reading Laravel Documentation",
+      "duration": 25
+  }
+  ```
+  *(Duration is in minutes)*
+
+### E. Notifications API
+
+- **Get All Notifications:** `GET /api/notifications`
+- **Mark All as Read:** `POST /api/notifications/mark-all-read`
+- **Mark Single as Read:** `PUT /api/notifications/{id}/mark-read`
+- **Delete Notification:** `DELETE /api/notifications/{id}`
+- **Generate Deadline Alerts:** `POST /api/notifications/generate-deadline-reminders`
+
+---
+
+## 3. Administrator API Endpoints
+
+These endpoints require the user's Bearer token **AND** the user must have `is_admin = true`. Standard users will receive a `403 Forbidden` response.
+
+### A. Manage Users
+- **List Users:** `GET /api/admin/users` (Returns users + their task counts)
+- **Create User:** `POST /api/admin/users`
+- **Update User:** `PUT /api/admin/users/{user_id}`
+- **Delete User:** `DELETE /api/admin/users/{user_id}` (Deletes user and cascades to delete all their tasks/projects)
+
+### B. Global Task Management
+- **List All Tasks (Cross-User):** `GET /api/admin/tasks`
+- **Create Task for Specific User:** `POST /api/admin/tasks` (Requires `user_id` in body)
+- **Update Any Task:** `PUT /api/admin/tasks/{task_id}`
+- **Delete Any Task:** `DELETE /api/admin/tasks/{task_id}`
+
+### C. System Analytics
+- **Get Global Stats:** `GET /api/admin/stats`
+  Returns aggregate metrics: total users, total global tasks, global completion rate, and recent activity.
+
+---
+
+## 4. Error Responses
+
+The API uses standard HTTP status codes combined with structured JSON error messages.
+
+### 400 / 422 Bad Request / Validation Error
 ```json
 {
-    "success": true,
-    "data": {
-        "total": 12,
-        "completed": 7,
-        "pending": 5,
-        "percentage": 58
+    "message": "The given data was invalid.",
+    "errors": {
+        "email": ["The email field is required."]
     }
 }
 ```
 
----
-
-## Field Specifications
-
-### Categories
-- `work` - Pekerjaan
-- `personal` - Personal
-- `learning` - Belajar
-- `health` - Kesehatan
-
-### Priority
-- `low` - Rendah (🟢)
-- `medium` - Sedang (🟡)
-- `high` - Tinggi (🔴)
-
-### Status
-- `pending` - Belum selesai
-- `completed` - Selesai
-
-### Project ID (project_id)
-- `project_id` (integer, nullable) - The ID of the project this task belongs to
-- Must be a valid project ID from the `projects` table
-- Set to `null` if the task is not part of any project
-
-### Is Single Task (is_single_task)
-- `is_single_task` (boolean) - Indicates if the task is a standalone task
-- `true` - Task is a single/standalone task (not part of a project)
-- `false` - Task is part of a project
-- **REQUIRED**: When adding a task to a project, you MUST set this to `false`
-- The API will automatically set this to `false` if you provide a valid `project_id`
-
----
-
-## Projects API
-
-Base URL: `/api/projects`
-
-### 1. Get All Projects
-**GET** `/api/projects`
-
-**Headers:**
-```
-X-CSRF-TOKEN: {csrf_token}
-```
-
-**Response:**
+### 401 Unauthenticated
+Thrown if the Bearer Token is missing, invalid, or expired.
 ```json
 {
-    "success": true,
-    "data": [
-        {
-            "id": 1,
-            "user_id": 1,
-            "name": "My Project",
-            "description": "Project description",
-            "status": "active",
-            "created_at": "2026-02-23T10:00:00",
-            "updated_at": "2026-02-23T10:00:00"
-        }
-    ],
-    "message": "Projects retrieved successfully"
+    "message": "Unauthenticated."
 }
 ```
 
-### 2. Create New Project
-**POST** `/api/projects`
-
-**Headers:**
-```
-Content-Type: application/json
-X-CSRF-TOKEN: {csrf_token}
-```
-
-**Body:**
-```json
-{
-    "name": "My New Project",
-    "description": "Project description",
-    "status": "active"
-}
-```
-
-**Response:** (201 Created)
-```json
-{
-    "success": true,
-    "data": {
-        "id": 1,
-        "user_id": 1,
-        "name": "My New Project",
-        "description": "Project description",
-        "status": "active",
-        "created_at": "2026-02-23T10:00:00",
-        "updated_at": "2026-02-23T10:00:00"
-    },
-    "message": "Project created successfully"
-}
-```
-
-### 3. Get Single Project
-**GET** `/api/projects/{id}`
-
-**Response:**
-```json
-{
-    "success": true,
-    "data": {
-        "id": 1,
-        "user_id": 1,
-        "name": "My Project",
-        "description": "Project description",
-        "status": "active",
-        "created_at": "2026-02-23T10:00:00",
-        "updated_at": "2026-02-23T10:00:00"
-    },
-    "message": "Project retrieved successfully"
-}
-```
-
-### 4. Update Project
-**PUT** `/api/projects/{id}`
-
-**Body:**
-```json
-{
-    "name": "Updated Project Name",
-    "status": "completed"
-}
-```
-
-**Response:**
-```json
-{
-    "success": true,
-    "data": {
-        "id": 1,
-        "user_id": 1,
-        "name": "Updated Project Name",
-        "description": "Project description",
-        "status": "completed",
-        "created_at": "2026-02-23T10:00:00",
-        "updated_at": "2026-02-23T11:00:00"
-    },
-    "message": "Project updated successfully"
-}
-```
-
-### 5. Delete Project
-**DELETE** `/api/projects/{id}`
-
-**Response:**
-```json
-{
-    "success": true,
-    "message": "Project deleted successfully"
-}
-```
-
-### Project Status Values
-- `active` - Project is ongoing
-- `completed` - Project is finished
-- `archived` - Project is archived
-
----
-
-## Error Responses
-
-### 400 Bad Request
-```json
-{
-    "success": false,
-    "message": "Validation error message"
-}
-```
-
-### 403 Unauthorized
+### 403 Forbidden
+Thrown if trying to access another user's resource or an admin endpoint without privileges.
 ```json
 {
     "success": false,
@@ -387,196 +254,10 @@ X-CSRF-TOKEN: {csrf_token}
 }
 ```
 
-### 500 Server Error
+### 404 Not Found
 ```json
 {
     "success": false,
-    "message": "Internal server error"
+    "message": "Record not found."
 }
 ```
-
----
-
-## JavaScript Integration
-
-Frontend sudah terintegrasi dengan API ini. Key functions:
-
-- `loadTasks()` - Load semua tasks dari API
-- `createTaskCard(taskData)` - Display task
-- `updateTaskStatus(taskId, newStatus)` - Update task status
-- `deleteTask(taskId)` - Delete task
-- `updateStats()` - Fetch dan update stats
-
-## Example API Call (dari JavaScript)
-
-```javascript
-// Get all tasks
-const response = await fetch('/api/tasks', {
-    headers: {
-        'X-CSRF-TOKEN': csrfToken,
-    }
-});
-const result = await response.json();
-
-// Create standalone task (not part of a project)
-const response = await fetch('/api/tasks', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': csrfToken,
-    },
-    body: JSON.stringify({
-        title: 'Task Title',
-        description: 'Task description',
-        category: 'work',
-        priority: 'high',
-        due_date: '2026-02-28'
-    })
-});
-
-// Create task WITHIN a project (IMPORTANT: must set is_single_task to false)
-const response = await fetch('/api/tasks', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': csrfToken,
-    },
-    body: JSON.stringify({
-        title: 'Project Task Title',
-        description: 'Task description',
-        category: 'work',
-        priority: 'high',
-        due_date: '2026-02-28',
-        project_id: 1,  // Must be a valid project ID from the projects table
-        is_single_task: false  // REQUIRED: must be false when adding to a project
-    })
-});
-
-// Get all projects (to find valid project IDs)
-const response = await fetch('/api/projects', {
-    headers: {
-        'X-CSRF-TOKEN': csrfToken,
-    }
-});
-const result = await response.json();
-// result.data contains array of projects with their IDs
-```
-
----
-
-## Migration Command
-
-Untuk setup database, jalankan:
-```bash
-php artisan migrate
-```
-
-Ini akan membuat table `tasks` dengan struktur yang sesuai.
-
----
-
-## Notes
-
-- UI tetap sama, hanya backend logic yang berubah
-- CSRF protection aktif untuk semua POST, PUT, DELETE requests
-- User authentication diperlukan untuk semua endpoints
-- Data secara otomatis di-scope ke user yang login
-
----
-
-## Notification API (Tugas Frontend)
-
-Base URL: `/api/notifications`
-
-### Endpoint yang perlu diimplementasikan di Frontend:
-
-#### 1. Get All Notifications
-**GET** `/api/notifications`
-
-**Headers:**
-```
-X-CSRF-TOKEN: {csrf_token}
-```
-
-**Response:**
-```json
-{
-    "success": true,
-    "data": [
-        {
-            "id": 1,
-            "user_id": 1,
-            "type": "deadline_reminder",
-            "title": "Deadline Reminder",
-            "message": "Task 'Finish Project' is due tomorrow!",
-            "is_read": false,
-            "created_at": "2026-03-01T10:00:00",
-            "updated_at": "2026-03-01T10:00:00"
-        }
-    ],
-    "total": 1,
-    "message": "Notifications retrieved successfully"
-}
-```
-
-#### 2. Get Single Notification
-**GET** `/api/notifications/{id}`
-
-**Headers:**
-```
-X-CSRF-TOKEN: {csrf_token}
-```
-
-**Response:**
-```json
-{
-    "success": true,
-    "data": {
-        "id": 1,
-        "user_id": 1,
-        "type": "deadline_reminder",
-        "title": "Deadline Reminder",
-        "message": "Task 'Finish Project' is due tomorrow!",
-        "is_read": false,
-        "created_at": "2026-03-01T10:00:00",
-        "updated_at": "2026-03-01T10:00:00"
-    },
-    "message": "Notification retrieved successfully"
-}
-```
-
-#### 3. Delete Notification
-**DELETE** `/api/notifications/{id}`
-
-**Headers:**
-```
-X-CSRF-TOKEN: {csrf_token}
-```
-
-**Response:**
-```json
-{
-    "success": true,
-    "message": "Notification deleted successfully"
-}
-```
-
-### Struktur Data Notification
-
-| Field | Type | Description |
-|-------|------|-------------|
-| id | integer | Unique ID |
-| user_id | integer | Owner of notification |
-| type | string | Type: deadline_reminder, dll |
-| title | string | Judul notification |
-| message | string | Isi pesan notification |
-| is_read | boolean | Sudah dibaca atau belum |
-| created_at | datetime | Waktu dibuat |
-| updated_at | datetime | Waktu diperbarui |
-
-### Tugas Frontend:
-1. Tampilkan semua notification user dengan memanggil GET /api/notifications
-2. Tampilkan detail notification dengan memanggil GET /api/notifications/{id}
-3. Hapus notification dengan memanggil DELETE /api/notifications/{id}
-4. Tambahkan indikator untuk notification yang belum dibaca (is_read: false)
-5. Saat notification dibaca, bisa langsung hapus atau bisa ditambahkan fitur mark as read (hubungi backend jika perlu fitur ini)

@@ -8,6 +8,7 @@
     <!-- CSS Utama -->
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard-final.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
 
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -18,47 +19,7 @@
 <body>
     <div class="dashboard-layout">
         <!-- div1: Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="sidebar-logo">
-                <div class="logo-icon">
-                    <i class='bx bx-bolt'></i>
-                </div>
-                <span class="logo-text">ProductivityFlow</span>
-            </div>
-
-            <nav class="sidebar-menu">
-                <a href="/dashboard" class="menu-item active">
-                    <i class='bx bx-home'></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="/projects" class="menu-item">
-                    <i class='bx bx-folder'></i>
-                    <span>Projects</span>
-                </a>
-                <a href="/task-manager" class="menu-item">
-                    <i class='bx bx-task'></i>
-                    <span>Tasks</span>
-                </a>
-                <a href="/analytics" class="menu-item">
-                    <i class='bx bx-bar-chart-alt-2'></i>
-                    <span>Analytics</span>
-                </a>
-                <a href="/settings" class="menu-item">
-                    <i class='bx bx-cog'></i>
-                    <span>Settings</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class='bx bx-log-out'></i>
-                        <span>Logout</span>
-                    </button>
-                </form>
-            </div>
-        </aside>
+        @include('partials.sidebar')
 
         <!-- div2: Top Navbar -->
         <header class="navbar-top">
@@ -98,13 +59,9 @@
 
                         <!-- Profile Dropdown Menu -->
                         <div class="dropdown-menu" id="profileMenu">
-                            <a href="#profile" class="dropdown-item">
+                            <a href="/profile" class="dropdown-item">
                                 <i class='bx bx-user'></i>
                                 <span>Profile</span>
-                            </a>
-                            <a href="/settings" class="dropdown-item">
-                                <i class='bx bx-cog'></i>
-                                <span>Settings</span>
                             </a>
                             <hr class="dropdown-divider">
                             <form method="POST" action="{{ route('logout') }}" style="width: 100%;">
@@ -223,9 +180,9 @@
                 </div>
 
                 <div class="overview-chart">
-                    <div class="chart-bar" style="height: 60%"></div>
-                    <div class="chart-bar" style="height: 40%"></div>
-                    <div class="chart-bar" style="height: 80%"></div>
+                    <div class="chart-bar" id="chart-bar-urgent" style="height: 5%"></div>
+                    <div class="chart-bar" id="chart-bar-inprogress" style="height: 5%"></div>
+                    <div class="chart-bar" id="chart-bar-completed" style="height: 5%"></div>
                 </div>
             </section>
 
@@ -235,46 +192,9 @@
                     <h2 class="card-title">Recent Alerts</h2>
                 </div>
                 
-                <div class="alerts-list">
-                    <div class="alert-item priority-high">
-                        <div class="alert-icon">
-                            <i class='bx bx-error-circle'></i>
-                        </div>
-                        <div class="alert-content">
-                            <p class="alert-message">Deadline approaching: API Integration</p>
-                            <span class="alert-time">2 jam lagi</span>
-                        </div>
-                    </div>
-
-                    <div class="alert-item priority-medium">
-                        <div class="alert-icon">
-                            <i class='bx bx-info-circle'></i>
-                        </div>
-                        <div class="alert-content">
-                            <p class="alert-message">Tinjauan: Frontend Testing</p>
-                            <span class="alert-time">3 jam lalu</span>
-                        </div>
-                    </div>
-
-                    <div class="alert-item priority-medium">
-                        <div class="alert-icon">
-                            <i class='bx bx-check-double'></i>
-                        </div>
-                        <div class="alert-content">
-                            <p class="alert-message">Tugas Selesai: Database Optimization</p>
-                            <span class="alert-time">1 jam lalu</span>
-                        </div>
-                    </div>
-
-                    <div class="alert-item priority-low">
-                        <div class="alert-icon">
-                            <i class='bx bx-comment'></i>
-                        </div>
-                        <div class="alert-content">
-                            <p class="alert-message">Komentar baru di Project Q2</p>
-                            <span class="alert-time">30 menit lalu</span>
-                        </div>
-                    </div>
+                <div class="alerts-list" id="recent-alerts-list">
+                    {{-- Populated dynamically via dashboard.js from /api/notifications --}}
+                    <p style="color:var(--text-secondary);text-align:center;padding:1rem;">Memuat notifikasi...</p>
                 </div>
             </section>
 

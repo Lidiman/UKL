@@ -69,6 +69,9 @@ function openEditModal(task) {
     document.getElementById('editTaskPriority').value = task.priority;
     document.getElementById('editTaskDueDate').value = task.due_date;
     document.getElementById('editTaskStatus').value = task.status;
+    if (document.getElementById('editTaskProject')) {
+        document.getElementById('editTaskProject').value = task.project_id || '';
+    }
     
     editTaskModal.classList.add('active');
 }
@@ -113,6 +116,7 @@ taskForm.addEventListener('submit', async (e) => {
         category: document.getElementById('taskCategory').value,
         priority: document.getElementById('taskPriority').value,
         due_date: document.getElementById('taskDueDate').value,
+        project_id: document.getElementById('taskProject') ? (document.getElementById('taskProject').value || null) : null,
     };
     
     if (!validateFormData(formData)) {
@@ -224,14 +228,18 @@ function createTaskCard(taskData) {
     
     taskCard.innerHTML = `
         <div class="task-header">
-            <div class="task-checkbox">
-                <input type="checkbox" ${isCompleted ? 'checked' : ''}>
-            </div>
             <div class="task-title-section">
                 <h3 class="task-title ${isCompleted ? 'completed' : ''}">${escapeHtml(taskData.title)}</h3>
                 <p class="task-description">${escapeHtml(taskData.description || '')}</p>
             </div>
-            <button class="task-menu">⋮</button>
+            <div class="task-actions-top">
+                <button class="task-action-btn btn-edit-task" title="Edit">
+                    <i class='bx bx-pencil'></i>
+                </button>
+                <button class="task-action-btn btn-delete-task" title="Hapus">
+                    <i class='bx bx-trash'></i>
+                </button>
+            </div>
         </div>
         
         <div class="task-meta">
@@ -239,19 +247,38 @@ function createTaskCard(taskData) {
             <span class="category-badge">${categoryIcons[taskData.category]} ${categoryNames[taskData.category]}</span>
             <span class="due-date">📅 ${formattedDate}</span>
         </div>
+
+        <div class="task-footer">
+            <button class="btn-complete-task ${isCompleted ? 'is-completed' : ''}" title="${isCompleted ? 'Tandai Belum Selesai' : 'Tandai Selesai'}">
+                ${isCompleted 
+                    ? "<i class='bx bx-check-circle'></i> Selesai" 
+                    : "<i class='bx bx-circle'></i> Tandai Selesai"}
+            </button>
+            <span class="task-status-chip ${isCompleted ? 'chip-done' : 'chip-pending'}">
+                ${isCompleted ? 'Done' : 'Pending'}
+            </span>
+        </div>
     `;
     
-    // Handle checkbox - update status
-    const checkbox = taskCard.querySelector('input[type="checkbox"]');
-    checkbox.addEventListener('change', async () => {
-        const newStatus = checkbox.checked ? 'completed' : 'pending';
+    // Handle complete button
+    const completeBtn = taskCard.querySelector('.btn-complete-task');
+    completeBtn.addEventListener('click', async () => {
+        const currentStatus = taskCard.getAttribute('data-status');
+        const newStatus = currentStatus === 'completed' ? 'pending' : 'completed';
         await updateTaskStatus(taskData.id, newStatus, taskCard);
     });
     
-    // Handle menu button
-    const menuBtn = taskCard.querySelector('.task-menu');
-    menuBtn.addEventListener('click', () => {
-        showTaskMenu(taskCard, taskData.id);
+    // Handle edit button
+    taskCard.querySelector('.btn-edit-task').addEventListener('click', () => {
+        const task = allTasks.find(t => t.id === taskData.id);
+        if (task) openEditModal(task);
+    });
+    
+    // Handle delete button
+    taskCard.querySelector('.btn-delete-task').addEventListener('click', async () => {
+        if (confirm('Hapus task ini?')) {
+            await deleteTask(taskData.id, taskCard);
+        }
     });
     
     tasksContainer.insertBefore(taskCard, tasksContainer.firstChild);
@@ -263,7 +290,7 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Update task status (complete/incomplete)
+// Update task status and refresh card UI
 async function updateTaskStatus(taskId, newStatus, taskCard) {
     try {
         const response = await fetch(`${API_BASE_URL}/${taskId}`, {
@@ -279,10 +306,31 @@ async function updateTaskStatus(taskId, newStatus, taskCard) {
 
         if (result.success) {
             const title = taskCard.querySelector('.task-title');
+            const completeBtn = taskCard.querySelector('.btn-complete-task');
+            const statusChip = taskCard.querySelector('.task-status-chip');
+
             if (newStatus === 'completed') {
                 title.classList.add('completed');
+                if (completeBtn) {
+                    completeBtn.className = 'btn-complete-task is-completed';
+                    completeBtn.innerHTML = "<i class='bx bx-check-circle'></i> Selesai";
+                    completeBtn.title = 'Tandai Belum Selesai';
+                }
+                if (statusChip) {
+                    statusChip.className = 'task-status-chip chip-done';
+                    statusChip.textContent = 'Done';
+                }
             } else {
                 title.classList.remove('completed');
+                if (completeBtn) {
+                    completeBtn.className = 'btn-complete-task';
+                    completeBtn.innerHTML = "<i class='bx bx-circle'></i> Tandai Selesai";
+                    completeBtn.title = 'Tandai Selesai';
+                }
+                if (statusChip) {
+                    statusChip.className = 'task-status-chip chip-pending';
+                    statusChip.textContent = 'Pending';
+                }
             }
             taskCard.setAttribute('data-status', newStatus);
             updateStats();
@@ -297,50 +345,7 @@ async function updateTaskStatus(taskId, newStatus, taskCard) {
 
 // ==================== Task Menu ====================
 function showTaskMenu(taskCard, taskId) {
-    // Reset any existing menus
-    document.querySelectorAll('.task-menu-popup').forEach(m => m.remove());
-    
-    const menu = document.createElement('div');
-    menu.className = 'task-menu-popup';
-    menu.innerHTML = `
-        <button class="menu-item delete-task">🗑️ Hapus</button>
-        <button class="menu-item edit-task">✏️ Edit</button>
-    `;
-    
-    menu.style.cssText = `
-        position: absolute;
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-        min-width: 120px;
-        z-index: 100;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    `;
-    
-    taskCard.style.position = 'relative';
-    taskCard.appendChild(menu);
-    
-    menu.querySelector('.delete-task').addEventListener('click', async () => {
-        await deleteTask(taskId, taskCard);
-        menu.remove();
-    });
-    
-    menu.querySelector('.edit-task').addEventListener('click', () => {
-        menu.remove();
-        // Find the task data from allTasks array
-        const task = allTasks.find(t => t.id === taskId);
-        if (task) {
-            openEditModal(task);
-        }
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!taskCard.contains(e.target)) {
-            menu.remove();
-        }
-    });
+    // No longer used - replaced with inline buttons
 }
 
 // Delete task
@@ -391,6 +396,7 @@ editTaskForm.addEventListener('submit', async (e) => {
         priority: document.getElementById('editTaskPriority').value,
         due_date: document.getElementById('editTaskDueDate').value,
         status: document.getElementById('editTaskStatus').value,
+        project_id: document.getElementById('editTaskProject') ? (document.getElementById('editTaskProject').value || null) : null,
     };
     
     if (!formData.title || !formData.category || !formData.priority || !formData.due_date || !formData.status) {
@@ -527,16 +533,19 @@ async function updateStats() {
 
         if (result.success) {
             const stats = result.data;
-            document.querySelectorAll('.stat-box')[0].querySelector('.stat-number').textContent = stats.total;
-            document.querySelectorAll('.stat-box')[1].querySelector('.stat-number').textContent = stats.completed;
-            document.querySelectorAll('.stat-box')[2].querySelector('.stat-number').textContent = stats.pending;
+            const statBoxes = document.querySelectorAll('.stat-box');
+            if (statBoxes.length >= 3) {
+                statBoxes[0].querySelector('.stat-number').textContent = stats.total;
+                statBoxes[1].querySelector('.stat-number').textContent = stats.completed;
+                statBoxes[2].querySelector('.stat-number').textContent = stats.pending;
+            }
             
             // Update progress
             const progressFill = document.querySelector('.progress-fill');
             const progressPercentage = document.querySelector('.progress-percentage');
             
-            progressFill.style.width = stats.percentage + '%';
-            progressPercentage.textContent = stats.percentage + '%';
+            if (progressFill) progressFill.style.width = stats.percentage + '%';
+            if (progressPercentage) progressPercentage.textContent = stats.percentage + '%';
         }
     } catch (error) {
         console.error('Error updating stats:', error);
@@ -627,7 +636,7 @@ style.textContent = `
         gap: 0.25rem;
     }
     
-    .menu-item {
+    .task-menu-popup .menu-item {
         padding: 0.5rem 1rem;
         background: none;
         border: none;
@@ -639,7 +648,7 @@ style.textContent = `
         font-size: 0.9rem;
     }
     
-    .menu-item:hover {
+    .task-menu-popup .menu-item:hover {
         background: rgba(102, 126, 234, 0.1);
         color: var(--highlight-color);
     }
@@ -649,5 +658,58 @@ document.head.appendChild(style);
 // ==================== Initialize ====================
 document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
+    loadProjectsForDropdowns();
+
+    // Profile dropdown
+    const profileBtn = document.getElementById('profileBtn');
+    const profileMenu = document.getElementById('profileMenu');
+    if (profileBtn && profileMenu) {
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileBtn.classList.toggle('active');
+            profileMenu.classList.toggle('active');
+        });
+    }
+
+    document.addEventListener('click', () => {
+        if (profileBtn) profileBtn.classList.remove('active');
+        if (profileMenu) profileMenu.classList.remove('active');
+    });
+
     console.log('✨ Task Manager Backend Ready!');
 });
+
+async function loadProjectsForDropdowns() {
+    try {
+        const response = await fetch('/api/projects', {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+            }
+        });
+        const result = await response.json();
+        if (result.success) {
+            const projects = result.data;
+            const taskProjectSelect = document.getElementById('taskProject');
+            const editTaskProjectSelect = document.getElementById('editTaskProject');
+            
+            if (taskProjectSelect && editTaskProjectSelect) {
+                taskProjectSelect.innerHTML = '<option value="">-- Tanpa Project --</option>';
+                editTaskProjectSelect.innerHTML = '<option value="">-- Tanpa Project --</option>';
+                
+                projects.forEach(p => {
+                    const opt1 = document.createElement('option');
+                    opt1.value = p.id;
+                    opt1.textContent = p.name;
+                    taskProjectSelect.appendChild(opt1);
+                    
+                    const opt2 = document.createElement('option');
+                    opt2.value = p.id;
+                    opt2.textContent = p.name;
+                    editTaskProjectSelect.appendChild(opt2);
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error loading projects for dropdowns:', error);
+    }
+}
