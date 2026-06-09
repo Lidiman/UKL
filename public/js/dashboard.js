@@ -89,18 +89,24 @@ async function updateStats() {
     try {
         const [response, response1, response3] = await Promise.all([
             fetch(API_STATS_URL, {
+                credentials: 'same-origin',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
                 }
             }),
             fetch(API_PROJECT_URL, {
+                credentials: 'same-origin',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
                 }
             }),
             fetch(API_NOTIFICATIONS_URL, {
+                credentials: 'same-origin',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
                 }
             })
         ]);
@@ -226,7 +232,11 @@ async function markAsRead(id, event) {
     try {
         const response = await fetch(`/api/notifications/${id}/mark-read`, {
             method: 'PUT',
-            headers: { 'X-CSRF-TOKEN': csrfToken }
+            credentials: 'same-origin',
+            headers: { 
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
         });
         const result = await response.json();
         if (result.success) {
@@ -273,8 +283,10 @@ async function updateNotifications() {
 
     try {
         const response = await fetch(API_NOTIFICATIONS_URL, {
+            credentials: 'same-origin',
             headers: {
                 'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
             }
         });
         const result = await response.json();
@@ -332,7 +344,11 @@ async function generateDeadlineReminders() {
     try {
         await fetch('/api/notifications/generate-deadline-reminders', {
             method: 'POST',
-            headers: { 'X-CSRF-TOKEN': csrfToken },
+            credentials: 'same-origin',
+            headers: { 
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
         });
     } catch (e) {
         console.warn('Could not generate deadline reminders:', e);
@@ -368,7 +384,11 @@ async function updateRecentAlerts() {
 
     try {
         const response = await fetch('/api/notifications', {
-            headers: { 'X-CSRF-TOKEN': csrfToken },
+            credentials: 'same-origin',
+            headers: { 
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
         });
         const result = await response.json();
         if (!result.success) return;
