@@ -56,6 +56,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             'data' => $request->user()
         ]);
     });
+
+    Route::put('/profile', [ApiAuthController::class, 'updateProfile']);
 });
 
 // Admin API routes (requires admin middleware)
@@ -64,6 +66,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::prefix('admin/users')->group(function () {
         Route::get('/', [AdminController::class, 'usersIndex']);
         Route::post('/', [AdminController::class, 'usersStore']);
+        Route::get('/{user}/detail', [AdminController::class, 'userDetail']);
         Route::get('/{user}', [AdminController::class, 'usersShow']);
         Route::put('/{user}', [AdminController::class, 'usersUpdate']);
         Route::delete('/{user}', [AdminController::class, 'usersDestroy']);

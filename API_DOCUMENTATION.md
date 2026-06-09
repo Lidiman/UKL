@@ -22,6 +22,21 @@ Accept: application/json
 
 > **Note for Web Clients (SPA):** If you are accessing the API from the official ProductivityFlow web dashboard on the same domain, session cookies are automatically used. You do not need to manually pass a Bearer token in the frontend code.
 
+#### Testing Tokens (Sandbox)
+For development and testing purposes, you can use the following pre-generated Bearer tokens:
+
+**1. Regular User Token**
+- **Email:** `user@gmail.com`
+- **Password:** `password`
+- **Token:** `4|H6rVhtxAqBu7TPruqXo267ytTXBrvJhvbKpaLihwb54b9f0a`
+- **Access Level:** Standard User endpoints (`/api/tasks`, `/api/projects`, etc.)
+
+**2. Administrator Token**
+- **Email:** `admin@gmail.com`
+- **Password:** `admin`
+- **Token:** `5|AxgNz8IZezk1HMdhjlG3762Dh8yMllL9w0qogTfg67cce2f7`
+- **Access Level:** All User endpoints + Admin endpoints (`/api/admin/users`, `/api/admin/tasks`, etc.)
+
 ---
 
 ## 1. Authentication API

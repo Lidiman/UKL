@@ -231,32 +231,6 @@
                 </div>
             </section>
 
-            <!-- div8: Productivity Score -->
-            <section class="card productivity-score">
-                <div class="card-header">
-                    <h2 class="card-title">Productivity</h2>
-                </div>
-                
-                <div class="score-content">
-                    <div class="score-number">
-                        <span class="score-value">8.4</span>
-                        <span class="score-unit">/10</span>
-                    </div>
-                    
-                    <div class="score-mini-chart">
-                        <div class="mini-bar" style="height: 40%"></div>
-                        <div class="mini-bar" style="height: 60%"></div>
-                        <div class="mini-bar" style="height: 75%"></div>
-                        <div class="mini-bar" style="height: 85%"></div>
-                        <div class="mini-bar" style="height: 70%"></div>
-                    </div>
-
-                    <div class="score-label">Minggu Ini</div>
-                </div>
-            </section>
-        </main>
-    </div>
-
     <script src="{{ asset('js/dashboard.js') }}"></script>
 </body>
 </html>

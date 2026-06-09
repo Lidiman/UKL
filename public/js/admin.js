@@ -1,5 +1,5 @@
 // ==================== API Configuration ====================
-const API_BASE_URL = '/api';
+const API_BASE_URL = '/web-api';
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
 // ==================== Notification ====================

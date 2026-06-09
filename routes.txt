@@ -1,0 +1,50 @@
+
+  GET|HEAD  api/admin/stats ............................................................................................... AdminController@stats
+  GET|HEAD  api/admin/tasks .......................................................................................... AdminController@tasksIndex
+  POST      api/admin/tasks .......................................................................................... AdminController@tasksStore
+  GET|HEAD  api/admin/tasks/{task} .................................................................................... AdminController@tasksShow
+  PUT       api/admin/tasks/{task} .................................................................................. AdminController@tasksUpdate
+  DELETE    api/admin/tasks/{task} ................................................................................. AdminController@tasksDestroy
+  GET|HEAD  api/admin/users .......................................................................................... AdminController@usersIndex
+  POST      api/admin/users .......................................................................................... AdminController@usersStore
+  GET|HEAD  api/admin/users/{user} .................................................................................... AdminController@usersShow
+  PUT       api/admin/users/{user} .................................................................................. AdminController@usersUpdate
+  DELETE    api/admin/users/{user} ................................................................................. AdminController@usersDestroy
+  GET|HEAD  api/admin/users/{user}/detail ............................................................................ AdminController@userDetail
+  GET|HEAD  api/analytics/stats ....................................................................................... AnalyticsController@stats
+  GET|HEAD  api/focus-sessions ..................................................................................... FocusSessionController@index
+  POST      api/focus-sessions ..................................................................................... FocusSessionController@store
+  POST      api/login ................................................................................................... ApiAuthController@login
+  POST      api/logout ................................................................................................. ApiAuthController@logout
+  GET|HEAD  api/notifications ...................................................................................... NotificationController@index
+  POST      api/notifications/generate-deadline-reminders .................................. NotificationController@generateDeadlineNotifications
+  POST      api/notifications/mark-all-read .................................................................. NotificationController@markAllRead
+  PUT       api/notifications/{id}/mark-read .................................................................... NotificationController@markRead
+  DELETE    api/notifications/{notification} ..................................................................... NotificationController@destroy
+  PUT       api/profile ......................................................................................... ApiAuthController@updateProfile
+  GET|HEAD  api/projects ................................................................................................ ProjectController@index
+  POST      api/projects ................................................................................................ ProjectController@store
+  GET|HEAD  api/projects/{project} ....................................................................................... ProjectController@show
+  PUT       api/projects/{project} ..................................................................................... ProjectController@update
+  DELETE    api/projects/{project} .................................................................................... ProjectController@destroy
+  GET|HEAD  api/tasks ...................................................................................................... TaskController@index
+  POST      api/tasks ...................................................................................................... TaskController@store
+  GET|HEAD  api/tasks/stats ................................................................................................ TaskController@stats
+  PUT       api/tasks/{task} .............................................................................................. TaskController@update
+  DELETE    api/tasks/{task} ............................................................................................. TaskController@destroy
+  GET|HEAD  api/user ............................................................................................................................ 
+  GET|HEAD  web-api/admin/stats ........................................................................................... AdminController@stats
+  GET|HEAD  web-api/admin/tasks ...................................................................................... AdminController@tasksIndex
+  POST      web-api/admin/tasks ...................................................................................... AdminController@tasksStore
+  GET|HEAD  web-api/admin/tasks/{task} ................................................................................ AdminController@tasksShow
+  PUT       web-api/admin/tasks/{task} .............................................................................. AdminController@tasksUpdate
+  DELETE    web-api/admin/tasks/{task} ............................................................................. AdminController@tasksDestroy
+  GET|HEAD  web-api/admin/users ...................................................................................... AdminController@usersIndex
+  POST      web-api/admin/users ...................................................................................... AdminController@usersStore
+  GET|HEAD  web-api/admin/users/{user} ................................................................................ AdminController@usersShow
+  PUT       web-api/admin/users/{user} .............................................................................. AdminController@usersUpdate
+  DELETE    web-api/admin/users/{user} ............................................................................. AdminController@usersDestroy
+  GET|HEAD  web-api/admin/users/{user}/detail ........................................................................ AdminController@userDetail
+
+                                                                                                                              Showing [46] routes
+

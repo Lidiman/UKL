@@ -292,7 +292,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('click', () => { profileBtn?.classList.remove('active'); profileMenu?.classList.remove('active'); });
 
     // Fetch stats
-    fetch('/api/tasks/stats', { headers: { 'X-CSRF-TOKEN': csrf } })
+    fetch('/api/tasks/stats', {
+        credentials: 'same-origin',
+        headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+    })
         .then(r => r.json())
         .then(res => {
             if (res.success) {
@@ -341,18 +344,67 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Save profile (demo)
-    document.getElementById('saveEditProfile').addEventListener('click', function () {
+    // ── Save Profile ────────────────────────────────────────────────────────
+    document.getElementById('saveEditProfile').addEventListener('click', async function () {
         const btn = this;
         btn.disabled = true;
         btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Saving...";
 
-        setTimeout(() => {
-            showAlert('success', '<i class="bx bx-check-circle"></i> Profile updated successfully!');
+        const name       = document.getElementById('editName').value.trim();
+        const email      = document.getElementById('editEmail').value.trim();
+        const currentPw  = document.getElementById('editCurrentPw').value;
+        const newPw      = document.getElementById('editNewPw').value;
+
+        const payload = {};
+        if (name)      payload.name  = name;
+        if (email)     payload.email = email;
+        if (newPw) {
+            payload.current_password      = currentPw;
+            payload.new_password          = newPw;
+            payload.new_password_confirmation = newPw;
+        }
+
+        try {
+            const res  = await fetch('/api/profile', {
+                method: 'PUT',
+                credentials: 'same-origin',
+                headers: {
+                    'X-CSRF-TOKEN': csrf,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                showAlert('success', "<i class='bx bx-check-circle'></i> " + data.message);
+
+                // Update visible name / email on the page without reload
+                if (data.data.name) {
+                    document.querySelectorAll('.hero-name, .profile-name, .modal-avatar-name').forEach(el => el.textContent = data.data.name);
+                }
+                if (data.data.email) {
+                    document.querySelectorAll('.hero-email').forEach(el => {
+                        el.innerHTML = "<i class='bx bx-envelope'></i> " + data.data.email;
+                    });
+                    document.querySelectorAll('.email-val').forEach(el => el.textContent = data.data.email);
+                }
+
+                // Clear password fields
+                document.getElementById('editCurrentPw').value = '';
+                document.getElementById('editNewPw').value = '';
+
+                setTimeout(() => closeModal(), 1800);
+            } else {
+                showAlert('error', "<i class='bx bx-error-circle'></i> " + (data.message || 'Gagal memperbarui profil.'));
+            }
+        } catch (err) {
+            showAlert('error', "<i class='bx bx-error-circle'></i> Terjadi kesalahan. Silakan coba lagi.");
+        } finally {
             btn.disabled = false;
             btn.innerHTML = "<i class='bx bx-save'></i> Save Changes";
-            setTimeout(() => closeModal(), 1500);
-        }, 1200);
+        }
     });
 
     function showAlert(type, html) {
