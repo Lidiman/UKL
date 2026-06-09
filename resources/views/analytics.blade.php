@@ -362,8 +362,7 @@ function updateWeekLabel() {
     const { label } = getWeekRange(weekOffset);
     document.getElementById('weekLabel').textContent = label;
     loadFromStorage();
-    renderWeeklyBars();
-    updateDonut();
+    updateStatsFromTasks();
 }
 
 document.getElementById('prevWeekBtn').addEventListener('click', () => { weekOffset--; updateWeekLabel(); });
@@ -407,24 +406,31 @@ function saveToStorage() {
 
 // --- Fetch & Stats ---
 async function updateStatsFromTasks() {
+    const { mon, sun } = getWeekRange(weekOffset);
+    const startDate = mon.toISOString().slice(0, 10);
+    const endDate = sun.toISOString().slice(0, 10);
+
     try {
-        const resp = await fetch('/api/tasks/stats', {
+        const resp = await fetch(`/api/analytics/stats?start_date=${startDate}&end_date=${endDate}`, {
             headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
         });
         const json = await resp.json();
         if (json.success) {
             const s = json.data;
-            document.getElementById('statTasks').textContent   = s.completed ?? 0;
-            document.getElementById('statGoals').textContent   = Math.ceil((s.completed ?? 0) * 0.6);
-            document.getElementById('statScore').textContent   = (s.percentage ?? 0) + '%';
-            document.getElementById('statFocus').textContent   = Math.ceil((s.completed ?? 0) * 1.5);
+            document.getElementById('statTasks').textContent   = s.tasks_finished ?? 0;
+            document.getElementById('statGoals').textContent   = s.goals_completed ?? 0;
+            document.getElementById('statScore').textContent   = (s.productivity_score ?? 0) + '%';
+            document.getElementById('statFocus').textContent   = s.focus_sessions ?? 0;
 
             // Donut
-            document.getElementById('donutDone').textContent  = s.completed ?? 0;
-            document.getElementById('donutTotal').textContent = s.total ?? 0;
+            document.getElementById('donutDone').textContent  = s.tasks_finished ?? 0;
+            document.getElementById('donutTotal').textContent = s.total_tasks ?? 0;
             document.getElementById('donutPct').textContent   = (s.percentage ?? 0) + '%';
             const offset = 283 - (283 * (s.percentage ?? 0) / 100);
             document.getElementById('donutFill').style.strokeDashoffset = offset;
+
+            // Render bars with real data
+            renderWeeklyBars(s.daily_stats);
         }
     } catch (_) {
         // Silently fall back to zeros
@@ -432,28 +438,27 @@ async function updateStatsFromTasks() {
 }
 
 // --- Weekly Bar Chart ---
-function renderWeeklyBars() {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    // Simulated values for demo — replace with real data when backend is ready
-    const values = [82, 55, 70, 40, 90, 30, 60];
+function renderWeeklyBars(dailyData) {
     const container = document.getElementById('weeklyBars');
-    container.innerHTML = days.map((d, i) => {
-        const pct = values[i];
+    
+    if (!dailyData || dailyData.length === 0) {
+        // Fallback or empty state
+        container.innerHTML = '<p class="text-center">No data for this week</p>';
+        return;
+    }
+
+    container.innerHTML = dailyData.map((d) => {
+        const pct = d.percentage;
         const cls = pct < 40 ? 'low' : pct < 65 ? 'mid' : '';
         return `
         <div class="day-progress-row">
-            <span class="day-label">${d}</span>
+            <span class="day-label">${d.day}</span>
             <div class="day-bar-track">
                 <div class="day-bar-fill ${cls}" style="width:${pct}%"></div>
             </div>
             <span class="day-val">${pct}%</span>
         </div>`;
     }).join('');
-}
-
-// --- Donut fallback init ---
-function updateDonut() {
-    updateStatsFromTasks();
 }
 
 // --- Motivation quotes ---

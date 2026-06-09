@@ -1,38 +1,91 @@
-# Dokumentasi API - ProductivityFlow
+# API Documentation - ProductivityFlow
 
-Dokumen ini menyediakan spesifikasi lengkap untuk seluruh API endpoint yang tersedia pada aplikasi **ProductivityFlow**, baik API untuk pengguna biasa (*User*) maupun untuk administrator (*Admin*).
+Welcome to the comprehensive API documentation for **ProductivityFlow**. This document outlines all available endpoints, required authentication headers, request payloads, and expected responses for both standard users and administrators.
 
 ---
 
-## Informasi Umum
+## General Information
 
 ### Base URL
-Seluruh endpoint API dapat diakses melalui base URL berikut:
+All API requests should be prefixed with the base URL of your application:
 ```http
-/api
+http://your-domain.com/api
 ```
 
-### Autentikasi & Keamanan
-1. **Session-based Authentication**: Semua endpoint dilindungi oleh sistem autentikasi Laravel. Pengguna harus login terlebih dahulu melalui web panel sebelum dapat mengakses endpoint ini.
-2. **CSRF Protection**: Semua request bermetode `POST`, `PUT`, dan `DELETE` wajib menyertakan CSRF Token yang dikirim melalui header `X-CSRF-TOKEN`.
-3. **Idempotency Key (Opsional)**: Untuk mencegah terjadinya submisi ganda akibat latensi jaringan pada pembuatan tugas (*Task*) atau proyek (*Project*), Anda dapat mengirimkan header `X-Idempotency-Key` dengan value berupa UUID unik. Hasil dari request pertama akan disimpan di cache selama 24 jam.
+### Authentication (Bearer Token)
+The API is secured using **Laravel Sanctum**. To access any protected endpoint, you must include a Bearer Token in the `Authorization` header of your HTTP request. 
+
+```http
+Authorization: Bearer {your_api_token_here}
+Accept: application/json
+```
+
+> **Note for Web Clients (SPA):** If you are accessing the API from the official ProductivityFlow web dashboard on the same domain, session cookies are automatically used. You do not need to manually pass a Bearer token in the frontend code.
 
 ---
 
-## 1. API Pengguna (User API Endpoints)
+## 1. Authentication API
 
-Semua endpoint berikut dibungkus dalam middleware `web` dan `auth`. Data yang dikembalikan secara otomatis ter-scope hanya untuk pengguna yang sedang login.
+These endpoints are used to generate and revoke API tokens.
 
-### A. Endpoint Profil Pengguna
+### A. Login & Generate Token
+Authenticates a user and returns a plain-text API token.
+- **URL**: `/api/login`
+- **Method**: `POST`
+- **Headers**: `Accept: application/json`
+- **Request Body**:
+  ```json
+  {
+      "email": "user@example.com",
+      "password": "yourpassword",
+      "device_name": "mobile_app" 
+  }
+  ```
+  *(Note: `device_name` is optional but recommended for tracking active sessions)*
+- **Response (200 OK)**:
+  ```json
+  {
+      "success": true,
+      "data": {
+          "user": {
+              "id": 1,
+              "name": "Jane Doe",
+              "email": "jane@example.com"
+          },
+          "token": "1|GetZI1JRFOFWhmChW163dtJmniVTMdUIA2qC258Rcfea50e2",
+          "token_type": "Bearer"
+      },
+      "message": "Login berhasil"
+  }
+  ```
 
-#### Get User Profile
-Mengambil informasi profil user yang sedang login.
+### B. Logout & Revoke Token
+Revokes the currently used token.
+- **URL**: `/api/logout`
+- **Method**: `POST`
+- **Headers**: 
+  ```http
+  Authorization: Bearer {token}
+  Accept: application/json
+  ```
+- **Response (200 OK)**:
+  ```json
+  {
+      "success": true,
+      "message": "Logout berhasil, token telah dihapus"
+  }
+  ```
+
+---
+
+## 2. User API Endpoints
+
+The following endpoints require a valid Bearer Token. Data returned is automatically scoped to the authenticated user.
+
+### A. User Profile
+Get the currently authenticated user's profile.
 - **URL**: `/api/user`
 - **Method**: `GET`
-- **Headers**:
-  ```http
-  X-CSRF-TOKEN: [csrf_token]
-  ```
 - **Response (200 OK)**:
   ```json
   {
@@ -42,749 +95,169 @@ Mengambil informasi profil user yang sedang login.
           "name": "Jane Doe",
           "email": "jane@example.com",
           "is_admin": false,
-          "created_at": "2026-06-08T12:00:00.000000Z",
-          "updated_at": "2026-06-08T12:00:00.000000Z"
+          "created_at": "2026-06-08T12:00:00.000000Z"
       }
   }
   ```
 
----
-
-### B. Endpoint Tugas (Tasks API)
+### B. Tasks API
 
 #### 1. Get All Tasks
-Mengambil semua tugas milik user yang sedang aktif.
 - **URL**: `/api/tasks`
 - **Method**: `GET`
 - **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": [
-          {
-              "id": 12,
-              "user_id": 1,
-              "project_id": 3,
-              "title": "Desain Wireframe Dashboard",
-              "description": "Membuat wireframe UI/UX untuk dashboard utama",
-              "category": "work",
-              "priority": "high",
-              "due_date": "2026-06-10T00:00:00.000000Z",
-              "status": "pending",
-              "is_single_task": false,
-              "created_at": "2026-06-08T12:30:00.000000Z",
-              "updated_at": "2026-06-08T12:30:00.000000Z"
-          }
-      ],
-      "message": "Tasks retrieved successfully"
-  }
-  ```
+  Returns an array of all active tasks belonging to the user.
 
-#### 2. Create New Task
-Membuat tugas baru.
+#### 2. Create Task
 - **URL**: `/api/tasks`
 - **Method**: `POST`
 - **Headers**:
   ```http
-  Content-Type: application/json
-  X-Idempotency-Key: [UUID_Unik] (Opsional)
+  X-Idempotency-Key: [UUID] (Optional to prevent double submission)
   ```
 - **Request Body**:
-  | Field | Type | Required | Description |
+  | Field | Type | Required | Notes |
   | :--- | :--- | :--- | :--- |
-  | `title` | string | **Yes** | Judul tugas (maks. 255 karakter) |
-  | `description` | string | No | Deskripsi atau catatan detail tugas |
-  | `category` | string | **Yes** | Harus salah satu dari: `work`, `personal`, `learning`, `health` |
-  | `priority` | string | **Yes** | Harus salah satu dari: `low`, `medium`, `high` |
-  | `due_date` | date | **Yes** | Tanggal jatuh tempo format YYYY-MM-DD |
-  | `project_id` | integer | No | ID Proyek yang valid (jika tugas dimasukkan ke dalam suatu proyek) |
-  | `is_single_task` | boolean | No | `true` jika tugas mandiri, `false` jika bagian dari proyek. Otomatis `false` jika `project_id` diisi |
-
-- **Example Body**:
-  ```json
-  {
-      "title": "Membaca Buku Laravel 12",
-      "description": "Membaca bab tentang routing dan middleware",
-      "category": "learning",
-      "priority": "medium",
-      "due_date": "2026-06-15",
-      "project_id": null,
-      "is_single_task": true
-  }
-  ```
-- **Response (201 Created)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 13,
-          "user_id": 1,
-          "project_id": null,
-          "title": "Membaca Buku Laravel 12",
-          "description": "Membaca bab tentang routing dan middleware",
-          "category": "learning",
-          "priority": "medium",
-          "due_date": "2026-06-15T00:00:00.000000Z",
-          "status": "pending",
-          "is_single_task": true,
-          "created_at": "2026-06-08T12:40:00.000000Z",
-          "updated_at": "2026-06-08T12:40:00.000000Z"
-      },
-      "message": "Task created successfully"
-  }
-  ```
+  | `title` | string | **Yes** | Max 255 chars |
+  | `category` | string | **Yes** | `work`, `personal`, `learning`, or `health` |
+  | `priority` | string | **Yes** | `low`, `medium`, or `high` |
+  | `due_date` | date | **Yes** | Format: YYYY-MM-DD |
+  | `project_id` | integer | No | Must be a valid project ID |
 
 #### 3. Update Task
-Memperbarui detail tugas yang sudah ada.
 - **URL**: `/api/tasks/{task_id}`
 - **Method**: `PUT`
-- **Request Body (Kirim field yang ingin diubah saja)**:
-  ```json
-  {
-      "status": "completed",
-      "priority": "high"
-  }
-  ```
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 13,
-          "user_id": 1,
-          "project_id": null,
-          "title": "Membaca Buku Laravel 12",
-          "description": "Membaca bab tentang routing dan middleware",
-          "category": "learning",
-          "priority": "high",
-          "due_date": "2026-06-15T00:00:00.000000Z",
-          "status": "completed",
-          "is_single_task": true,
-          "created_at": "2026-06-08T12:40:00.000000Z",
-          "updated_at": "2026-06-08T12:45:00.000000Z"
-      },
-      "message": "Task updated successfully"
-  }
-  ```
-
-#### 4. Delete Task
-Menghapus tugas berdasarkan ID.
-- **URL**: `/api/tasks/{task_id}`
-- **Method**: `DELETE`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "message": "Task deleted successfully"
-  }
-  ```
-
-#### 5. Get Task Statistics
-Mendapatkan metrik ringkasan tugas untuk digunakan pada Dashboard dan Analytics.
-- **URL**: `/api/tasks/stats`
-- **Method**: `GET`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "total": 10,
-          "work_total": 4,
-          "personal_total": 3,
-          "learning_total": 2,
-          "health_total": 1,
-          "completed": 6,
-          "pending": 4,
-          "taskwork_percent": 40.00,
-          "taskpersonal_percent": 30.00,
-          "tasklearning_percent": 20.00,
-          "taskhealth_percent": 10.00,
-          "urgent_task": 2
-      }
-  }
-  ```
-
----
-
-### C. Endpoint Proyek (Projects API)
-
-#### 1. Get All Projects
-Mengambil daftar proyek beserta seluruh tugas yang berasosiasi di dalamnya (*eager-loaded tasks*).
-- **URL**: `/api/projects`
-- **Method**: `GET`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": [
-          {
-              "id": 3,
-              "user_id": 1,
-              "name": "Pengembangan Website UKL",
-              "description": "Proyek akhir mata pelajaran produktif",
-              "status": "active",
-              "created_at": "2026-06-08T10:00:00.000000Z",
-              "updated_at": "2026-06-08T10:00:00.000000Z",
-              "tasks": [
-                  {
-                      "id": 12,
-                      "project_id": 3,
-                      "title": "Desain Wireframe Dashboard",
-                      "status": "pending",
-                      "priority": "high",
-                      "due_date": "2026-06-10"
-                  }
-              ]
-          }
-      ],
-      "total": 1,
-      "message": "Projects retrieved successfully"
-  }
-  ```
-
-#### 2. Create New Project
-Membuat proyek baru.
-- **URL**: `/api/projects`
-- **Method**: `POST`
-- **Request Body**:
-  | Field | Type | Required | Description |
-  | :--- | :--- | :--- | :--- |
-  | `name` | string | **Yes** | Nama proyek (maks. 255 karakter) |
-  | `description` | string | No | Penjelasan deskriptif mengenai proyek |
-  | `status` | string | No | Pilihan: `active`, `completed`, `archived` (Default: `active`) |
-
-- **Example Body**:
-  ```json
-  {
-      "name": "Belajar React Native",
-      "description": "Membuat aplikasi mobile Android & iOS",
-      "status": "active"
-  }
-  ```
-- **Response (201 Created)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 4,
-          "user_id": 1,
-          "name": "Belajar React Native",
-          "description": "Membuat aplikasi mobile Android & iOS",
-          "status": "active",
-          "created_at": "2026-06-08T12:50:00.000000Z",
-          "updated_at": "2026-06-08T12:50:00.000000Z"
-      },
-      "message": "Project created successfully"
-  }
-  ```
-
-#### 3. Get Single Project
-Mendapatkan rincian satu proyek secara spesifik beserta daftar tugasnya.
-- **URL**: `/api/projects/{project_id}`
-- **Method**: `GET`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 4,
-          "user_id": 1,
-          "name": "Belajar React Native",
-          "description": "Membuat aplikasi mobile Android & iOS",
-          "status": "active",
-          "created_at": "2026-06-08T12:50:00.000000Z",
-          "updated_at": "2026-06-08T12:50:00.000000Z",
-          "tasks": []
-      },
-      "message": "Project retrieved successfully"
-  }
-  ```
-
-#### 4. Update Project
-Mengubah nama, deskripsi, atau status proyek.
-- **URL**: `/api/projects/{project_id}`
-- **Method**: `PUT`
-- **Request Body**:
+- **Request Body (Partial updates allowed)**:
   ```json
   {
       "status": "completed"
   }
   ```
+
+#### 4. Delete Task
+- **URL**: `/api/tasks/{task_id}`
+- **Method**: `DELETE`
+
+#### 5. Get Task Statistics
+- **URL**: `/api/tasks/stats`
+- **Method**: `GET`
 - **Response (200 OK)**:
+  Returns task metrics (completed count, pending count, percentage by category, urgent tasks) for analytics displays.
+
+### C. Projects API
+
+#### 1. Get All Projects
+- **URL**: `/api/projects`
+- **Method**: `GET`
+- **Response (200 OK)**:
+  Returns all projects and eager-loads the tasks associated with them.
+
+#### 2. Create Project
+- **URL**: `/api/projects`
+- **Method**: `POST`
+- **Request Body**:
   ```json
   {
-      "success": true,
-      "data": {
-          "id": 4,
-          "user_id": 1,
-          "name": "Belajar React Native",
-          "description": "Membuat aplikasi mobile Android & iOS",
-          "status": "completed",
-          "created_at": "2026-06-08T12:50:00.000000Z",
-          "updated_at": "2026-06-08T12:55:00.000000Z"
-      },
-      "message": "Project updated successfully"
+      "name": "Mobile App Development",
+      "description": "Building the React Native app",
+      "status": "active"
   }
   ```
 
-#### 5. Delete Project
-Menghapus proyek. Tugas-tugas di dalamnya tidak akan terhapus, melainkan kehilangan relasinya terhadap proyek (`project_id` diset menjadi `null` dan `is_single_task` menjadi `true`).
+#### 3. Update Project
+- **URL**: `/api/projects/{project_id}`
+- **Method**: `PUT`
+
+#### 4. Delete Project
 - **URL**: `/api/projects/{project_id}`
 - **Method**: `DELETE`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "message": "Project deleted successfully"
-  }
-  ```
+  *Note: Deleting a project will not delete its tasks; tasks will simply be unassigned (`project_id` becomes `null`).*
 
----
+### D. Focus Sessions API
 
-### D. Endpoint Notifikasi (Notifications API)
-
-#### 1. Get All Notifications
-Mendapatkan semua notifikasi yang ditujukan kepada pengguna aktif.
-- **URL**: `/api/notifications`
+#### 1. Get Focus Sessions
+- **URL**: `/api/focus-sessions`
 - **Method**: `GET`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": [
-          {
-              "id": 1,
-              "user_id": 1,
-              "type": "deadline_reminder",
-              "title": "Deadline Mendekat!",
-              "message": "Tugas 'Desain Wireframe Dashboard' akan jatuh tempo besok.",
-              "is_read": false,
-              "created_at": "2026-06-08T08:00:00.000000Z",
-              "updated_at": "2026-06-08T08:00:00.000000Z"
-          }
-      ],
-      "total": 1,
-      "message": "Notifications retrieved successfully"
-  }
-  ```
 
-#### 2. Generate Deadline Reminders
-Menghasilkan notifikasi pengingat untuk tugas-tugas yang mendekati tenggat waktu (dalam 24 jam ke depan).
-- **URL**: `/api/notifications/generate-deadline-reminders`
-- **Method**: `POST`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "message": "1 deadline reminder(s) generated.",
-      "notifications_sent": 1
-  }
-  ```
-
-#### 3. Mark All Notifications as Read
-Menandai semua notifikasi pengguna sebagai telah dibaca.
-- **URL**: `/api/notifications/mark-all-read`
-- **Method**: `POST`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "message": "All notifications marked as read."
-  }
-  ```
-
-#### 4. Delete Notification
-Menghapus atau membuang notifikasi dari daftar pengguna.
-- **URL**: `/api/notifications/{notification_id}`
-- **Method**: `DELETE`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "message": "Notification deleted successfully"
-  }
-  ```
-
----
-
-## 2. API Administrator (Admin API Endpoints)
-
-Seluruh endpoint berikut dibungkus di bawah middleware `web`, `auth` (auth default session), dan middleware khusus `admin` yang memvalidasi apakah pengguna yang login memiliki nilai `is_admin = true`. Jika bukan admin, server akan melempar error `403 Forbidden`.
-
-### A. Endpoint Kelola Pengguna (Admin Users CRUD)
-
-#### 1. Get All Users
-Mengambil daftar seluruh pengguna terdaftar beserta jumlah tugas yang mereka miliki.
-- **URL**: `/api/admin/users`
-- **Method**: `GET`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": [
-          {
-              "id": 1,
-              "name": "Jane Doe",
-              "email": "jane@example.com",
-              "is_admin": true,
-              "created_at": "2026-06-08T12:00:00.000000Z",
-              "updated_at": "2026-06-08T12:00:00.000000Z",
-              "tasks_count": 10
-          },
-          {
-              "id": 2,
-              "name": "John Smith",
-              "email": "john@example.com",
-              "is_admin": false,
-              "created_at": "2026-06-08T12:15:00.000000Z",
-              "updated_at": "2026-06-08T12:15:00.000000Z",
-              "tasks_count": 3
-          }
-      ],
-      "message": "Users retrieved successfully"
-  }
-  ```
-
-#### 2. Create New User
-Membuat akun pengguna baru dari panel admin.
-- **URL**: `/api/admin/users`
+#### 2. Log Focus Session
+- **URL**: `/api/focus-sessions`
 - **Method**: `POST`
 - **Request Body**:
-  | Field | Type | Required | Description |
-  | :--- | :--- | :--- | :--- |
-  | `name` | string | **Yes** | Nama lengkap user |
-  | `email` | string | **Yes** | Email unik user (belum terdaftar) |
-  | `password` | string | **Yes** | Password minimal 6 karakter |
-  | `is_admin` | boolean | No | Menentukan apakah user adalah admin (Default: `false`) |
+  ```json
+  {
+      "task_name": "Reading Laravel Documentation",
+      "duration": 25
+  }
+  ```
+  *(Duration is in minutes)*
 
-- **Example Body**:
-  ```json
-  {
-      "name": "Budi Santoso",
-      "email": "budi@example.com",
-      "password": "secretpassword",
-      "is_admin": false
-  }
-  ```
-- **Response (201 Created)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 3,
-          "name": "Budi Santoso",
-          "email": "budi@example.com",
-          "is_admin": false,
-          "updated_at": "2026-06-08T13:00:00.000000Z",
-          "created_at": "2026-06-08T13:00:00.000000Z"
-      },
-      "message": "User created successfully"
-  }
-  ```
+### E. Notifications API
 
-#### 3. Get Single User Details
-Mendapatkan detail satu user spesifik berdasarkan ID.
-- **URL**: `/api/admin/users/{user_id}`
-- **Method**: `GET`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 2,
-          "name": "John Smith",
-          "email": "john@example.com",
-          "is_admin": false,
-          "created_at": "2026-06-08T12:15:00.000000Z",
-          "updated_at": "2026-06-08T12:15:00.000000Z"
-      },
-      "message": "User retrieved successfully"
-  }
-  ```
-
-#### 4. Update User Details
-Memperbarui informasi user (Nama, Email, Password, atau hak akses Admin).
-- **URL**: `/api/admin/users/{user_id}`
-- **Method**: `PUT`
-- **Request Body**:
-  ```json
-  {
-      "name": "John Smith Updated",
-      "is_admin": true
-  }
-  ```
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 2,
-          "name": "John Smith Updated",
-          "email": "john@example.com",
-          "is_admin": true,
-          "created_at": "2026-06-08T12:15:00.000000Z",
-          "updated_at": "2026-06-08T13:05:00.000000Z"
-      },
-      "message": "User updated successfully"
-  }
-  ```
-
-#### 5. Delete User
-Menghapus user. Menghapus user secara otomatis akan menghapus seluruh tugas (`tasks`) yang terkait dengan user tersebut di database (*Cascade Delete*). Admin tidak diperbolehkan menghapus akun mereka sendiri yang sedang aktif digunakan untuk login.
-- **URL**: `/api/admin/users/{user_id}`
-- **Method**: `DELETE`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "message": "User and associated tasks deleted successfully"
-  }
-  ```
-- **Response Error (jika menghapus akun sendiri - 400 Bad Request)**:
-  ```json
-  {
-      "success": false,
-      "message": "Cannot delete your own account"
-  }
-  ```
+- **Get All Notifications:** `GET /api/notifications`
+- **Mark All as Read:** `POST /api/notifications/mark-all-read`
+- **Mark Single as Read:** `PUT /api/notifications/{id}/mark-read`
+- **Delete Notification:** `DELETE /api/notifications/{id}`
+- **Generate Deadline Alerts:** `POST /api/notifications/generate-deadline-reminders`
 
 ---
 
-### B. Endpoint Kelola Tugas Global (Admin Tasks CRUD)
+## 3. Administrator API Endpoints
 
-#### 1. Get All Global Tasks
-Mengambil seluruh tugas yang ada dalam aplikasi lintas pengguna (*cross-user*) beserta detail user pemilik tugas tersebut.
-- **URL**: `/api/admin/tasks`
-- **Method**: `GET`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": [
-          {
-              "id": 12,
-              "user_id": 1,
-              "project_id": 3,
-              "title": "Desain Wireframe Dashboard",
-              "description": "Membuat wireframe UI/UX untuk dashboard utama",
-              "category": "work",
-              "priority": "high",
-              "due_date": "2026-06-10",
-              "status": "pending",
-              "is_single_task": false,
-              "created_at": "2026-06-08T12:30:00.000000Z",
-              "updated_at": "2026-06-08T12:30:00.000000Z",
-              "user": {
-                  "id": 1,
-                  "name": "Jane Doe",
-                  "email": "jane@example.com"
-              }
-          }
-      ],
-      "message": "All tasks retrieved successfully"
-  }
-  ```
+These endpoints require the user's Bearer token **AND** the user must have `is_admin = true`. Standard users will receive a `403 Forbidden` response.
 
-#### 2. Create Task for User
-Membuat tugas baru untuk user tertentu yang dipilih secara manual oleh admin.
-- **URL**: `/api/admin/tasks`
-- **Method**: `POST`
-- **Request Body**:
-  | Field | Type | Required | Description |
-  | :--- | :--- | :--- | :--- |
-  | `user_id` | integer | **Yes** | ID User pemilik tugas (harus ada di tabel `users`) |
-  | `title` | string | **Yes** | Judul tugas |
-  | `description` | string | No | Rincian tugas |
-  | `category` | string | **Yes** | `work`, `personal`, `learning`, or `health` |
-  | `priority` | string | **Yes** | `low`, `medium`, or `high` |
-  | `due_date` | date | **Yes** | Tanggal jatuh tempo (YYYY-MM-DD) |
-  | `status` | string | No | `pending` atau `completed` (Default: `pending`) |
+### A. Manage Users
+- **List Users:** `GET /api/admin/users` (Returns users + their task counts)
+- **Create User:** `POST /api/admin/users`
+- **Update User:** `PUT /api/admin/users/{user_id}`
+- **Delete User:** `DELETE /api/admin/users/{user_id}` (Deletes user and cascades to delete all their tasks/projects)
 
-- **Response (201 Created)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 14,
-          "user_id": 2,
-          "title": "Tugas dari Admin",
-          "description": "Dibuatkan oleh admin untuk diselesaikan",
-          "category": "work",
-          "priority": "high",
-          "due_date": "2026-06-12T00:00:00.000000Z",
-          "status": "pending",
-          "updated_at": "2026-06-08T13:10:00.000000Z",
-          "created_at": "2026-06-08T13:10:00.000000Z",
-          "user": {
-              "id": 2,
-              "name": "John Smith",
-              "email": "john@example.com"
-          }
-      },
-      "message": "Task created successfully"
-  }
-  ```
+### B. Global Task Management
+- **List All Tasks (Cross-User):** `GET /api/admin/tasks`
+- **Create Task for Specific User:** `POST /api/admin/tasks` (Requires `user_id` in body)
+- **Update Any Task:** `PUT /api/admin/tasks/{task_id}`
+- **Delete Any Task:** `DELETE /api/admin/tasks/{task_id}`
 
-#### 3. Get Single Task Details
-Mengambil rincian tugas spesifik beserta data usernya.
-- **URL**: `/api/admin/tasks/{task_id}`
-- **Method**: `GET`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 14,
-          "user_id": 2,
-          "title": "Tugas dari Admin",
-          "description": "Dibuatkan oleh admin untuk diselesaikan",
-          "category": "work",
-          "priority": "high",
-          "due_date": "2026-06-12",
-          "status": "pending",
-          "user": {
-              "id": 2,
-              "name": "John Smith"
-          }
-      },
-      "message": "Task retrieved successfully"
-  }
-  ```
-
-#### 4. Update Task details
-Memperbarui properti tugas apa saja yang ada di sistem.
-- **URL**: `/api/admin/tasks/{task_id}`
-- **Method**: `PUT`
-- **Request Body (Opsional/Parsial)**:
-  ```json
-  {
-      "status": "completed",
-      "priority": "low"
-  }
-  ```
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "id": 14,
-          "user_id": 2,
-          "title": "Tugas dari Admin",
-          "description": "Dibuatkan oleh admin untuk diselesaikan",
-          "category": "work",
-          "priority": "low",
-          "due_date": "2026-06-12",
-          "status": "completed",
-          "user": {
-              "id": 2,
-              "name": "John Smith"
-          }
-      },
-      "message": "Task updated successfully"
-  }
-  ```
-
-#### 5. Delete Task
-Menghapus tugas apa saja dari sistem.
-- **URL**: `/api/admin/tasks/{task_id}`
-- **Method**: `DELETE`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "message": "Task deleted successfully"
-  }
-  ```
+### C. System Analytics
+- **Get Global Stats:** `GET /api/admin/stats`
+  Returns aggregate metrics: total users, total global tasks, global completion rate, and recent activity.
 
 ---
 
-### C. Endpoint Dashboard Admin (Admin Stats)
+## 4. Error Responses
 
-#### Get Admin Stats
-Mendapatkan metrik agregat seluruh sistem untuk dashboard admin utama.
-- **URL**: `/api/admin/stats`
-- **Method**: `GET`
-- **Response (200 OK)**:
-  ```json
-  {
-      "success": true,
-      "data": {
-          "total_users": 15,
-          "total_tasks": 128,
-          "completed_tasks": 84,
-          "pending_tasks": 44,
-          "completion_rate": 66,
-          "recent_users": [
-              {
-                  "id": 3,
-                  "name": "Budi Santoso",
-                  "email": "budi@example.com",
-                  "created_at": "2026-06-08T13:00:00.000000Z"
-              }
-          ],
-          "recent_tasks": [
-              {
-                  "id": 14,
-                  "title": "Tugas dari Admin",
-                  "status": "completed",
-                  "created_at": "2026-06-08T13:10:00.000000Z",
-                  "user": {
-                      "id": 2,
-                      "name": "John Smith"
-                  }
-              }
-          ]
-      },
-      "message": "Admin stats retrieved successfully"
-  }
-  ```
+The API uses standard HTTP status codes combined with structured JSON error messages.
 
----
-
-## 3. Respon Kesalahan (Error Responses)
-
-Jika terjadi masalah pada server atau validasi parameter input, API akan memberikan respon dengan status HTTP yang sesuai beserta format JSON standar berikut:
-
-### 400 Bad Request
-Dilemparkan apabila terjadi kesalahan input client yang tidak memenuhi kriteria validasi.
+### 400 / 422 Bad Request / Validation Error
 ```json
 {
-    "success": false,
     "message": "The given data was invalid.",
     "errors": {
-        "title": [
-            "The title field is required."
-        ],
-        "category": [
-            "The selected category is invalid."
-        ]
+        "email": ["The email field is required."]
     }
 }
 ```
 
-### 403 Forbidden / Unauthorized
-Dilemparkan apabila user mencoba mengakses data atau endpoint yang bukan hak miliknya (misal: mengakses endpoint admin tanpa akun admin).
+### 401 Unauthenticated
+Thrown if the Bearer Token is missing, invalid, or expired.
+```json
+{
+    "message": "Unauthenticated."
+}
+```
+
+### 403 Forbidden
+Thrown if trying to access another user's resource or an admin endpoint without privileges.
 ```json
 {
     "success": false,
-    "message": "Unauthorized. Admin access required."
+    "message": "Unauthorized"
 }
 ```
 
 ### 404 Not Found
-Dilemparkan apabila data/model berdasarkan ID yang dikirimkan tidak ditemukan di database.
 ```json
 {
     "success": false,
     "message": "Record not found."
-}
-```
-
-### 500 Internal Server Error
-Dilemparkan apabila terjadi kegagalan sistem atau bug di sisi backend.
-```json
-{
-    "success": false,
-    "message": "Internal server error"
 }
 ```

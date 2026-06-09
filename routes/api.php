@@ -6,8 +6,19 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\FocusSessionController;
 
-Route::middleware(['web', 'auth'])->group(function () {
+// Public API Routes
+Route::post('/login', [ApiAuthController::class, 'login']);
+
+// Protected API Routes
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [ApiAuthController::class, 'logout']);
+
+    Route::get('/analytics/stats', [AnalyticsController::class, 'stats']);
+    
     Route::prefix('tasks')->group(function () {
         Route::get('/', [TaskController::class, 'index']);         
         Route::post('/', [TaskController::class, 'store']);         
@@ -35,8 +46,8 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     // Focus Sessions
     Route::prefix('focus-sessions')->group(function () {
-        Route::get('/', [App\Http\Controllers\FocusSessionController::class, 'index']);
-        Route::post('/', [App\Http\Controllers\FocusSessionController::class, 'store']);
+        Route::get('/', [FocusSessionController::class, 'index']);
+        Route::post('/', [FocusSessionController::class, 'store']);
     });
 
     Route::get('/user', function (Request $request) {
@@ -48,7 +59,7 @@ Route::middleware(['web', 'auth'])->group(function () {
 });
 
 // Admin API routes (requires admin middleware)
-Route::middleware(['web', 'auth:default', 'admin'])->group(function () {
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     // Admin Users CRUD
     Route::prefix('admin/users')->group(function () {
         Route::get('/', [AdminController::class, 'usersIndex']);
@@ -70,6 +81,3 @@ Route::middleware(['web', 'auth:default', 'admin'])->group(function () {
     // Admin Stats
     Route::get('/admin/stats', [AdminController::class, 'stats']);
 });
-
-
-//Fixed the middleware for API routes to ensure proper authentication and admin access control.

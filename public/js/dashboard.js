@@ -138,6 +138,36 @@ async function updateStats() {
             if (barCompleted) { barCompleted.style.height = toHeight(completed); barCompleted.title = 'Completed: '   + completed; }
             // ============================================
 
+            // ===== Update Project Progress =====
+            const projectsList = document.querySelector('.projects-list');
+            if (projectsList && projects.data) {
+                const topProjects = projects.data.slice(0, 3);
+                
+                if (topProjects.length === 0) {
+                    projectsList.innerHTML = '<p style="color:var(--text-secondary);text-align:center;padding:1rem;">Belum ada proyek</p>';
+                } else {
+                    projectsList.innerHTML = '';
+                    topProjects.forEach(proj => {
+                        const tasks = proj.tasks || [];
+                        const totalTasks = tasks.length;
+                        const completedTasks = tasks.filter(t => t.status === 'completed').length;
+                        const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+                        
+                        const item = document.createElement('div');
+                        item.className = 'project-item';
+                        item.innerHTML = `
+                            <div class="project-name">${proj.name}</div>
+                            <div class="project-bar">
+                                <div class="project-progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                            <span class="project-percentage">${progress}%</span>
+                        `;
+                        projectsList.appendChild(item);
+                    });
+                }
+            }
+            // ============================================
+
             if (notifications.length > 0) {
                 document.querySelector('.notification-badge').textContent = notifications.length;
                 document.querySelector('.notification-badge').style.display = 'flex';
