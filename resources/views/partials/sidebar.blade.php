@@ -28,9 +28,9 @@
             <i class='bx bx-bar-chart-alt-2'></i>
             <span>Analytics</span>
         </a>
-        <a href="/settings" class="menu-item {{ Request::is('settings*') ? 'active' : '' }}">
+        <a href="/profile" class="menu-item {{ Request::is('profile*') ? 'active' : '' }}">
             <i class='bx bx-cog'></i>
-            <span>Settings</span>
+            <span>Profile</span>
         </a>
     </nav>
 
