@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Show banner
             if (typeof showPomoBanner === 'function') {
-                showPomoBanner("🎉 Sesi Pomodoro Selesai!", "Kerja bagus! Waktunya istirahat sejenak.");
+                showPomoBanner("Sesi Pomodoro Selesai!", "Kerja bagus! Waktunya istirahat sejenak.", 'bx bxs-party');
             } else {
                 alert("Focus session completed! Take a break.");
             }
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Show banner
             if (typeof showPomoBanner === 'function') {
-                showPomoBanner("⏰ Waktu Istirahat Selesai!", "Istirahat selesai! Kembali fokus sekarang.");
+                showPomoBanner("Waktu Istirahat Selesai!", "Istirahat selesai! Kembali fokus sekarang.", 'bx bx-coffee');
             } else {
                 alert("Break is over! Time to focus.");
             }

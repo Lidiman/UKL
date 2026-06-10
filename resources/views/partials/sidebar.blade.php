@@ -162,11 +162,12 @@
 <script>
 let _pomoBannerTimeout = null;
 
-function showPomoBanner(title, msg) {
+function showPomoBanner(title, msg, iconClass = 'bx bx-check-circle') {
     const banner = document.getElementById('pomodoroDropBanner');
     const progressBar = document.getElementById('pomoBannerProgress');
     document.getElementById('pomoBannerTitle').textContent = title;
     document.getElementById('pomoBannerMsg').textContent = msg;
+    document.querySelector('.pomo-drop-icon').innerHTML = `<i class='${iconClass}'></i>`;
 
     // Reset progress bar
     progressBar.style.transition = 'none';
@@ -224,19 +225,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         notificationShown = true;
 
                         const isFocus = state.currentMode === 'focus';
-                        const title = isFocus ? "🎉 Sesi Pomodoro Selesai!" : "⏰ Waktu Istirahat Selesai!";
+                        const title = isFocus ? "Sesi Pomodoro Selesai!" : "Waktu Istirahat Selesai!";
                         const msg = isFocus
                             ? "Kerja bagus! Waktunya istirahat sejenak."
                             : "Istirahat selesai! Kembali fokus sekarang.";
+                        const iconClass = isFocus ? 'bx bxs-party' : 'bx bx-coffee';
 
                         // 1. In-page drop banner
-                        showPomoBanner(title, msg);
+                        showPomoBanner(title, msg, iconClass);
 
                         // 2. Browser Notification (if granted)
                         if ("Notification" in window && Notification.permission === "granted") {
                             const notification = new Notification("ProductivityFlow", {
-                                body: msg,
-                                icon: "https://cdn-icons-png.flaticon.com/512/2082/2082875.png"
+                                body: msg
                             });
                             notification.onclick = function() {
                                 window.focus();
