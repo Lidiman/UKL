@@ -248,8 +248,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function completeSession() {
         pauseTimer();
-        // Play sound if possible (omitted for now)
         
+        // Play sound
+        try {
+            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+            audio.play().catch(e => console.log('Audio autoplay blocked'));
+        } catch (e) {}
+
         if (currentMode === 'focus') {
             const focusMinutes = TIMES.focus / 60;
             totalFocusMinutes += focusMinutes;
@@ -262,11 +267,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             addHistoryItem(currentTaskName, focusMinutes);
             
+            // Show banner
+            if (typeof showPomoBanner === 'function') {
+                showPomoBanner("🎉 Sesi Pomodoro Selesai!", "Kerja bagus! Waktunya istirahat sejenak.");
+            } else {
+                alert("Focus session completed! Take a break.");
+            }
+            
             // Auto switch to short break
-            alert("Focus session completed! Take a break.");
             switchMode('shortBreak');
         } else {
-            alert("Break is over! Time to focus.");
+            // Show banner
+            if (typeof showPomoBanner === 'function') {
+                showPomoBanner("⏰ Waktu Istirahat Selesai!", "Istirahat selesai! Kembali fokus sekarang.");
+            } else {
+                alert("Break is over! Time to focus.");
+            }
+            
             switchMode('focus');
         }
         
